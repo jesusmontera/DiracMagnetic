@@ -1,5 +1,5 @@
 # DiracMagnetic
-Apply magnetic fields to Dirac equation spinors in python
+Apply magnetic fields to Dirac equation spinors in python(under construction)
 
 
 https://user-images.githubusercontent.com/11144373/219892414-d41841cc-5f7f-46ed-aac7-6577b36d2a8a.mp4
