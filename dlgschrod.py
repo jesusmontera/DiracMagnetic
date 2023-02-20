@@ -134,7 +134,7 @@ class Ui_DlgSch(object):
         self.txSpinX.setText(_translate("DlgSch", "1"))
         self.label_8.setText(_translate("DlgSch", "Y"))
         self.txSpinY.setToolTip(_translate("DlgSch", "<html><head/><body><p>X dir vector </p><p>from -1 to 1</p></body></html>"))
-        self.txSpinY.setText(_translate("DlgSch", "0"))
+        self.txSpinY.setText(_translate("DlgSch", "1"))
         self.txSpinZ.setToolTip(_translate("DlgSch", "<html><head/><body><p>X dir vector </p><p>from -1 to 1</p></body></html>"))
         self.txSpinZ.setText(_translate("DlgSch", "0"))
         self.label_9.setText(_translate("DlgSch", "Z"))

@@ -62,7 +62,7 @@ class Ui_Dialog(object):
         self.checkInvert.setObjectName("checkInvert")
 
         self.retranslateUi(Dialog)
-        self.listdir.setCurrentRow(0)
+        self.listdir.setCurrentRow(1)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

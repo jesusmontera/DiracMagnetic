@@ -10,7 +10,7 @@ class magneticlass():
         self.FIELD_Z=2
         self.dirfield=0 # x y o z
         self.bInvert=False 
-        self.Bmaxmag=10.
+        self.Bmaxmag=1000.
         self.B =None # magnetuic filed N*N*N*3
 
         # list with two 3d vectors for draw main arrow
@@ -60,43 +60,50 @@ class magneticlass():
             
     def makeB(self,dirfield,Bmaxmag,bInvert):
         self.btext=""
-        self.B = np.zeros((self.N,self.N,self.N,3))
-        vmag=0.
+        self.B = np.zeros((self.N,self.N,self.N,3))        
         self.dirfield=dirfield
-        incmag=Bmaxmag/self.N
         self.Bmaxmag=Bmaxmag
         self.bInvert=bInvert
+        if not bInvert:
+            vmag=Bmaxmag            
+            incmag=-2.0 * Bmaxmag/self.N
+        else:            
+            vmag=-Bmaxmag            
+            incmag=2.0 * Bmaxmag/self.N
+            
         if dirfield == self.FIELD_X:
-            vdir=np.array([1.,0.,0.])
+            if bInvert:
+                vdir=np.array([1.,0.,0.])
+            else:
+                vdir=np.array([-1.,0.,0.])
             for x in range (self.N):
                 vmag+=incmag
-                if bInvert:
-                    vv = vdir*(Bmaxmag-vmag)
-                else:
-                    vv = vdir*vmag
+                vv = vdir*vmag
                 for y in range(self.N):                    
                     for z in range(self.N):                        
                         self.B[x][y][z]= vv
         
         elif dirfield == self.FIELD_Y:
-            vdir=np.array([0.,1.,0.])
+            
+            if bInvert:
+                vdir=np.array([0.,1.,0.])
+            else:
+                vdir=np.array([0.,-1.,0.])
+                
             for y in range (self.N):
                 vmag+=incmag
-                if bInvert:
-                    vv = vdir*(Bmaxmag-vmag)
-                else:
-                    vv = vdir*vmag
+                vv = vdir*vmag
                 for x in range(self.N):                    
                     for z in range(self.N):                        
                         self.B[x][y][z]= vv
         elif dirfield == self.FIELD_Z:
-            vdir=np.array([0.,0.,1.])
+            if bInvert:
+                vdir=np.array([0.,0.,1])
+            else:
+                vdir=np.array([0.,0.,-1])
             for z in range (self.N):
-                vmag+=incmag
-                if bInvert:
-                    vv = vdir*(Bmaxmag-vmag)
-                else:
-                    vv = vdir*vmag
+                vmag+=incmag                
+                vv = vdir*vmag
                 for x in range(self.N):                    
                     for y in range(self.N):                        
                         self.B[x][y][z]= vv
@@ -106,23 +113,5 @@ class magneticlass():
 
 
     
-##    def getArrow(self):
-##        if self.dirfield == self.FIELD_X:
-##            return np.array(np.array([1.,0.,0.]))
-##        elif self.dirfield == self.FIELD_Y:
-##            return np.array(np.array([0.,1.,0.]))
-##        elif self.dirfield == self.FIELD_Z:
-##            return np.array(np.array([0.,0.,1.]))
-##        
-####        N = self.N
-#####        Bvec  =  np.copy(self.B[N//2][N//2][N//2])                
-####        BvecUp =self.B[N//2][N//2][0]
-####        BvecDown =self.B[N//2][N//2][N-1]
-####        Bvec=BvecDown - BvecUp
-####        print("Bvec down-up in z",Bvec)
-####        Bvec  /=  np.linalg.norm(Bvec)
-##        return Bvec
-            
-
 
             
