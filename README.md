@@ -1,5 +1,6 @@
 # Dirac Magnetic Python 3.6 OpenGL QT5
 Apply magnetic fields to Dirac equation spinors in python(under construction).
+Based on marl0ny Dirac examples from Github.https://github.com/marl0ny/split-operator-simulations 
 
 Works making a numpy.dot between magnetic B vectors and the spin extracted from the Dirac psi (or a specific spin for Schroduinger equation). Because each B vector is not normalized, the dot result is the same no matter if the spin in that axis points a little or a lot in the same or (opposite) direction of B field, witch is what happens in Gerlach experiment, that all particles are deflected the same amount. 
 Optionally u can load B field from a npy file, that can be maked with magpylib(look at that folder) 
