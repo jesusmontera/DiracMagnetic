@@ -26,12 +26,7 @@ class magneticlass():
         self.btext="magpy"
         self.B = np.load(sfilepath)
         
-        for x in  range(self.N):
-            for y in  range(self.N):
-                for z in  range(self.N):
-                    tmp=self.B[x][y][z][1]
-                    self.B[x][y][z][1]=self.B[x][y][z][2]
-                    self.B[x][y][z][2]=tmp
+
                     
             
         
