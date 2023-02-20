@@ -19,16 +19,16 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.camYangle=0.0
         self.labelinfo=None
         self.arrows=[]
-        
+        self.Btext=""
         # camera speed for rotating and moving
         self.rotangle=3.0
         self.speed=2.0
         QtOpenGL.QGLWidget.__init__(self, self.parent)
                 
-    def drawOGLText(self,pos,text,fontsize=12):
+    def drawOGLText(self,pos,text,fontsize=12, color=[1.,1.,1.]):
         glPushMatrix ()        
         glTranslate(-pos[0], -pos[1], -pos[2])
-        glColor3f(1., 1.,1.)
+        glColor3f(color[0], color[1],color[2])
         font = QtGui.QFont("Arial");
         font.setPointSize(fontsize)            
         self.renderText(0,0,0,text,font)
@@ -153,6 +153,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         pos[0]+=1.
         vec=[0,1.0,0]
         drawVector(pos,vec,7,0.3,color)
+        # Y
+        
         
     def paintGL(self):
         
@@ -166,7 +168,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         drawCube(0,0, 0,self.spacesize/2,self.spacesize/2,self.spacesize/2)
 
         self.drawAxes()
-        
+        if self.Btext!="":            
+            pos = [ -self.spacesize/2-4 , 0 , -self.spacesize/2]
+            self.drawOGLText(pos,self.Btext,fontsize=14,color=[0.9, 0, 0])
+       
         if self.pos_vbo is not None:
 
             # B arrow

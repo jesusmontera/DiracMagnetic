@@ -6,15 +6,13 @@ import numpy as np
 
 class mydlgSch(QtWidgets.QDialog):
     """Employee dialog."""
-    def __init__(self, parent=None,bBavailable=False):
+    def __init__(self, parent=None):
         super().__init__(parent)
         # Create an instance of the GUI
         self.ui = Ui_DlgSch()
         # Run the .setupUi() method to show the GUI
         
         self.ui.setupUi(self)
-        self.ui.checkB.setEnabled(bBavailable)
-        self.ui.checkB.setChecked(bBavailable)        
         
     def myvalidator(self,w,vmin,vmax,vdefault=0.0):
         
@@ -59,9 +57,7 @@ class mydlgSch(QtWidgets.QDialog):
         return np.array([x,y,z])
     def getMaxFrames(self):
         return int(self.ui.txMaxSteps.text())
-    def isMagneticOn(self):
-        return self.ui.checkB.isChecked()
-        #self.ui.btMakeB.clicked.connect(self.makeB)
+    
     def getInitialSpin(self):
         blochspin= np.zeros(3)
         blochspin[0]=float(self.ui.txSpinX.text())

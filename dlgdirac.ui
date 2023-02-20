@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DlgSch</class>
- <widget class="QDialog" name="DlgSch">
+ <class>DlgDiract</class>
+ <widget class="QDialog" name="DlgDiract">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>393</height>
+    <width>575</width>
+    <height>513</height>
    </rect>
   </property>
   <property name="font">
@@ -16,19 +16,24 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Schroduinger  options</string>
+   <string>Dirac options</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>320</y>
-     <width>241</width>
-     <height>61</height>
+     <x>410</x>
+     <y>350</y>
+     <width>161</width>
+     <height>81</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
    <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+    <enum>Qt::Vertical</enum>
    </property>
    <property name="standardButtons">
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
@@ -40,7 +45,7 @@
      <x>20</x>
      <y>20</y>
      <width>191</width>
-     <height>131</height>
+     <height>121</height>
     </rect>
    </property>
    <property name="title">
@@ -148,15 +153,15 @@
     <rect>
      <x>220</x>
      <y>20</y>
-     <width>181</width>
+     <width>141</width>
      <height>131</height>
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;momentum (speed) is:&lt;/p&gt;&lt;p&gt;p=k*2*pi / L &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;momentum(speed) is &lt;/p&gt;&lt;p&gt;p = k*2*pi / L&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>kinetic Energy</string>
+    <string>Kinetic Energy</string>
    </property>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
@@ -249,45 +254,99 @@
   <widget class="QGroupBox" name="groupBoxSpin">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>160</y>
-     <width>271</width>
-     <height>91</height>
+     <x>20</x>
+     <y>180</y>
+     <width>371</width>
+     <height>201</height>
     </rect>
    </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;dir vector for spin that will be used to interact with magnetic field. WIll be automatically normalized&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
    <property name="title">
-    <string>initial Spin in Bloch coordinates</string>
+    <string>inital Spin and spinors</string>
    </property>
-   <widget class="QLabel" name="label_7">
+   <widget class="QRadioButton" name="opcspin0">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>30</y>
-      <width>21</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>X</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txSpinX">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>50</y>
-      <width>61</width>
-      <height>25</height>
+      <x>10</x>
+      <y>40</y>
+      <width>311</width>
+      <height>23</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;X dir vector &lt;/p&gt;&lt;p&gt;from -1 to 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The spinors will be created from momentun so the spin extracted from then will point in the Bloch sphere to direction of particle Kinetic&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
-     <string>1</string>
+     <string>spin and spinors from kinetic</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="opcspin1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>331</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;specify the spin you want below amd the spinors will be created from this and energy eigen Spinors mixing your spin and the momentum&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>make spinors from specific spin below:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txspinupreal">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>130</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1.0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>110</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>real</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txspinupimag">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>130</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -296,73 +355,95 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>30</y>
-      <width>21</width>
-      <height>17</height>
+      <x>250</x>
+      <y>110</y>
+      <width>111</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>Y</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txSpinY">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>50</y>
-      <width>61</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;X dir vector &lt;/p&gt;&lt;p&gt;from -1 to 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txSpinZ">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>50</y>
-      <width>61</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;X dir vector &lt;/p&gt;&lt;p&gt;from -1 to 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <string>imaginary</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>30</y>
-      <width>21</width>
-      <height>17</height>
+      <x>20</x>
+      <y>130</y>
+      <width>71</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>Z</string>
+     <string>spin up</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txspindownreal">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>170</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>170</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>spin down</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txspindownimag">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>170</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
   </widget>
   <widget class="QLabel" name="label_12">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>280</y>
+     <x>400</x>
+     <y>270</y>
      <width>181</width>
      <height>31</height>
     </rect>
@@ -377,8 +458,8 @@
   <widget class="QLineEdit" name="txMaxSteps">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>280</y>
+     <x>440</x>
+     <y>300</y>
      <width>61</width>
      <height>25</height>
     </rect>
@@ -393,13 +474,123 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>390</y>
+     <width>391</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Magnetic Field B (from magnetic window)</string>
+   </property>
+   <widget class="QListWidget" name="listBspin">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>381</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="currentRow">
+     <number>0</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>dot B with psi positive spin from spinnors</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>dot B with psi negative spin from spinnors</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>dot B with psi positive+negative spin from spinnors</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>70</y>
+     <width>171</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Sans</family>
+     <pointsize>13</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(64, 98, 191);
+color: rgb(238, 238, 236);</string>
+   </property>
+   <property name="title">
+    <string>Simulation Mode </string>
+   </property>
+   <widget class="QRadioButton" name="opcSplit">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>40</y>
+      <width>112</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>SplitStep</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="opcEigen">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>80</y>
+      <width>112</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>free eigen</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>DlgSch</receiver>
+   <receiver>DlgDiract</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -415,7 +606,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>DlgSch</receiver>
+   <receiver>DlgDiract</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -425,6 +616,70 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>opcspin0</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>txspinupreal</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>opcspin0</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>txspinupimag</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>opcspin0</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>txspindownreal</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>342</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>opcspin0</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>txspindownimag</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>342</y>
     </hint>
    </hints>
   </connection>

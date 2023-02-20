@@ -43,7 +43,8 @@ class Bdlg(QtWidgets.QDialog):
                                                              "Open B npy file",
                                                              "", "npy Files (*.npy)")
         if check:            
-            self.parent.B.B = np.load(file,allow_pickle=True)
+            #self.parent.B.B = np.load(file,allow_pickle=True)
+            self.parent.B.load_npyFile(file)
             self.plotB()
     def saveBfile(self):
         if self.parent.B.B is None: return
@@ -51,13 +52,20 @@ class Bdlg(QtWidgets.QDialog):
                                                   'save B npy file',
                                                   "", "npy Files (*.npy)")
         if check:
-            np.save(file, self.parent.B.B,allow_pickle=True)            
-        
-    def plotB(self):
+            np.save(file, self.parent.B.B)            
+    def getBiggestMag():        
+        np.linalg.norm(v)
+    def plotB(self):                
         factoreduce=10 # reduce number of arrows so we can see then ok
         self.glWidget.clearArrows()
         color=np.array([0.8,0.,0.])
         N=self.parent.N
+
+        # this 3 lines are for arrows  scale after adding them
+        maxarrows=int((N/factoreduce+1)**3)
+        magnitudes=np.zeros(maxarrows)
+        numarrows=0
+        # add the arrows to glwidget
         for x in range (N):
             if x % factoreduce ==0:
                 for y in range(N):
@@ -66,12 +74,25 @@ class Bdlg(QtWidgets.QDialog):
                             if z % factoreduce ==0:
                                 vdir=np.copy(self.parent.B.B[x][y][z])                                
                                 norm=np.linalg.norm(vdir)
+                                
                                 if self.parent.B.bInvert:
                                     vdir*=-1
                                     
                                 if norm > 0:                                                                        
                                     pos=np.array([x,y,z])
                                     self.glWidget.addArrow(pos, vdir/norm, color)
+                                    magnitudes[numarrows]=norm
+                                    numarrows+=1
+        #now scale the arrows
+        maxmag= np.max(magnitudes)
+        for i in range(numarrows):
+            s=magnitudes[i]/maxmag
+            self.glWidget.scaleArrow(i,s*9)
+
+        minmag= np.round(np.min(magnitudes),3)
+        maxmag=np.round(maxmag,3)
+        self.ui.lbinfo.setText("B magnitude from " + str(minmag) +  " to " + str(maxmag) + " " + self.parent.B.btext)
+        
         self.glWidget.update()
                                     
     
@@ -82,10 +103,7 @@ class Bdlg(QtWidgets.QDialog):
         self.ui.lbinfo.setText("Making magnetic B array of vectors")
         
         bInvert=self.ui.checkInvert.isChecked()
-        self.parent.B.makeB(Baxis,Bmaxmag,bInvert)        
-        bmin=np.round(np.min(self.parent.B.B),1)
-        bmax= np.round(np.max(self.parent.B.B),1)
-        self.ui.lbinfo.setText("B from " + str(bmin) +  " to " + str(bmax))        
+        self.parent.B.makeB(Baxis,Bmaxmag,bInvert)                
         self.plotB()
         
         

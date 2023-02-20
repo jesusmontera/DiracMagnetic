@@ -33,7 +33,10 @@ class GLBWidget(QtOpenGL.QGLWidget):
         self.arrows.append(apos-self.spacesize/2)
         self.arrows.append(avector)
         self.arrows.append(color)
-
+    def scaleArrow(self,na,s):
+        self.arrows[na*3+1]*=s
+        
+        
         
         
     def keyPressEvent(self, event):
@@ -110,7 +113,7 @@ class GLBWidget(QtOpenGL.QGLWidget):
             pos=self.arrows[i*3]
             vec=self.arrows[i*3+1]
             color=self.arrows[i*3+2]                            
-            drawVector(pos,vec,5.,0.3,color)                    
+            drawVector(pos,vec,1.,0.3,color)                    
     def drawAxes(self):        
         color=[1.,1.,1.]
         # X

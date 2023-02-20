@@ -16,9 +16,24 @@ class magneticlass():
         # list with two 3d vectors for draw main arrow
         # (first  position and second dir vector )
         self.mainArrow=[]
+        self.btext=""
     def clear(self):
+        self.btext=""
         self.mainArrow=[]
         self.B =None
+    def load_npyFile(self, sfilepath):
+        self.mainArrow=[]
+        self.btext="magpy"
+        self.B = np.load(sfilepath)
+        
+        for x in  range(self.N):
+            for y in  range(self.N):
+                for z in  range(self.N):
+                    tmp=self.B[x][y][z][1]
+                    self.B[x][y][z][1]=self.B[x][y][z][2]
+                    self.B[x][y][z][2]=tmp
+                    
+            
         
     def _makeMainArrow(self):
         
@@ -49,7 +64,7 @@ class magneticlass():
             
             
     def makeB(self,dirfield,Bmaxmag,bInvert):
-        
+        self.btext=""
         self.B = np.zeros((self.N,self.N,self.N,3))
         vmag=0.
         self.dirfield=dirfield

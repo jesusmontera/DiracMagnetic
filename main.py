@@ -10,7 +10,6 @@ from mydlgogl import mydlgOgl
 
 from myDirac3D import myDirac3D # encapsulates dirac (both split step and free eigen periodic)
 
-
 from mydlgdirac import mydlgDirac
 from myMagnetic import magneticlass
 from mydlgB import Bdlg
@@ -79,12 +78,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.sliderOGL.setRange(0, 0)
             self.glWidget.arrows=[]            
                 # add B arrow to OpenGL
+            self.glWidget.Btext=self.B.btext
             if self.B.mainArrow  != []:                                                           
                 self.glWidget.addArrow(self.B.mainArrow[0] , self.B.mainArrow[1],[0.8,0.,0.],11.)
         else:
             self.B.B=Bbefore
             
         self.glWidget.update()
+        
                                         
                 
     def saveSchFile(self):
@@ -176,7 +177,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 spinpos, spinvec = self.schroduinger.getSpinbloch(animpos)
 
             if self.B.mainArrow != []:
-                self.glWidget.addArrow(self.B.mainArrow[0], self.B.mainArrow[1],[0.8,0.,0.],11.)
+                self.glWidget.addArrow(self.B.mainArrow[0], self.B.mainArrow[1],[0.8,0.,0.],11.)                             
+                
             self.glWidget.addArrow(spinpos, spinvec,[0.,0.7,0.])
             # paint open GL
             self.glWidget.update()
@@ -277,8 +279,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 L = float(self.txL.text())
                 DT=float(self.txDT.text())
                 POS0=self.dlgscho.getPos()
-                K0 = self.dlgscho.getK()
-                bB =self.dlgscho.isMagneticOn()
+                K0 = self.dlgscho.getK()                
                 
                 spinbloch = self.dlgscho.getInitialSpin()
                 maxframes=self.dlgscho.getMaxFrames()            
