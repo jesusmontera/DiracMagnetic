@@ -59,14 +59,14 @@ def plotCube(ax, r):
        if np.sum(np.abs(s-e)) == r[1]-r[0]:
             ax.plot3D(*zip(s, e), color="green")
       
-def displaymagpsystem(sg,Lmm,azimuth=30.):
+def displaymagpsystem(sg,Lmm,azimuth=0.):
     #define figure
     fig = plt.figure(figsize=(6, 6))
     ax = fig.add_subplot(1,1,1, projection='3d')        
-    ax.view_init(20,azimuth)
+    ax.view_init(0,azimuth)
     plotCube(ax,[-Lmm/2., Lmm/2.])    
     figsg = magpy.displaySystem(sg,subplotAx=ax, direc=True)    
-    ax.view_init(0,azimuth)
+    #ax.view_init(0,azimuth)
 def animmagpysystem(sg,Lmm,topangle=0):
     fig = plt.figure(figsize=(6, 6))
     ax = fig.add_subplot(1,1,1, projection='3d')

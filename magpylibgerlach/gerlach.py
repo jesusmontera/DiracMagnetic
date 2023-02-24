@@ -1,3 +1,5 @@
+# needs magpylib (2.3 pip3 )
+# and easygui (but just for the choice box so u can easy remove it if dont want to install it)
 import magpylib as magpy
 from magpylib.source.magnet import Box
 import numpy as np
@@ -5,25 +7,33 @@ from tqdm import tqdm
 from plotmag import displaymagpsystem
 from plotmag import plot_B_3D_arrows,animmagpysystem,displaymagpsystem
 from easygui import choicebox
+from threading import Thread
+
 #fixed magnet parameters
 #s = s /np.linalg.norm(s)
 L = 2.  # space length in atomic units
 N = 64
 msg = "Select mode save file or load file and plot"
 title = "B magnetic field"
-choices = ["create B file npy",        
+choices = ["create B file npy Z  UP positive down negative",
+           "create B file npy Z down positive top negative",
            "load B file npy and plot"]
 choice = choicebox(msg, title, choices)
-if choice==choices[1]:
+
+if choice==None:
+    exit(0)
+elif choice==choices[0]:
+    Bdir=-1 # B positive top
+elif choice==choices[1]:
+    Bdir=1 # B positive down
+elif choice==choices[2]:
     B=np.load("Bgerlach.npy")
     print("B min",np.amin(B)," max ",np.amax(B))
-    plot_B_3D_arrows(B, L,N)
-    
+    plot_B_3D_arrows(B, L,N)    
     exit(0)
 
-def makeB3d(sg,L,N):    
-    DX = (L/N)
-    B = np.zeros((N,N,N,3))
+def makeB3d(B,sg,L,N):    
+    DX = (L/N)    
     Lmmhalf = Lmm/2.
     NtoLmm= DX * borlenmm
     maxxx,maxyy,maxzz=-1E10,-1E10,-1E10
@@ -49,32 +59,46 @@ def makeB3d(sg,L,N):
     print("maxyy",maxyy)
     print("maxzz",maxzz)
     print("Lmmhalf",Lmmhalf)
-    return B
+    
+
+                        
+
+    
 borlenmm = 5.29177210903E-8 ## in milimeters
 Lmm= L * borlenmm # space length in mm
-B0=1000 # militeslas
+B0=1500. # militeslas
+
 ### upper
-mup = magpy.source.magnet.Box(mag=[0, -B0, -B0], dim=[Lmm*6, Lmm*2, Lmm*2],
+mup = magpy.source.magnet.Box(mag=[0, -B0*Bdir, -B0*Bdir], dim=[Lmm*6, Lmm*2, Lmm*2],
                              pos=[0, 0, Lmm*2])
 mup.rotate(45, [1,0,0])
 
 # lower
-mdown1 = magpy.source.magnet.Box(mag=[0, B0,B0], dim=[Lmm*6, Lmm*2, Lmm*2],
+mdown1 = magpy.source.magnet.Box(mag=[0, B0*Bdir,B0*Bdir], dim=[Lmm*6, Lmm*2, Lmm*2],
                              pos=[0, Lmm*1.4, -Lmm*2])
 mdown1.rotate(45, [1,0,0])
-mdown2 = magpy.source.magnet.Box(mag=[0, B0,B0], dim=[Lmm*6, Lmm*2, Lmm*2],
+mdown2 = magpy.source.magnet.Box(mag=[0, B0*Bdir,B0*Bdir], dim=[Lmm*6, Lmm*2, Lmm*2],
                              pos=[0, -Lmm*1.4, -Lmm*2])
 
 mdown2.rotate(45, [1,0,0])
-
+if Bdir== -1:
+    mdown1.move([0,0,Lmm*4])
+    mdown2.move([0,0,Lmm*4])
+    mup.move([0,0,-Lmm*4])
 
 
 c = magpy.Collection(mup,mdown1,mdown2)
-displaymagpsystem(c,Lmm)
-print("making 3d B field...")
-Bfield = makeB3d(c,L,N)
-np.save("Bgerlach.npy",Bfield) 
-plot_B_3D_arrows(Bfield, L,N)
+displaymagpsystem(c,Lmm,10)
+print("making 3d B field (will take  5 minutes)...")
+B = np.zeros((N,N,N,3))
+thmakeB = Thread(target=makeB3d, args=(B,c,L,N,))
+thmakeB.start()
+thmakeB.join()
+if Bdir== 1:
+    np.save("BgerlachPositiveDown.npy",B)
+else:
+    np.save("BgerlachPositiveUp.npy",B)
+plot_B_3D_arrows(B, L,N)
+print("end")            
 
-print("end")                                    
 
