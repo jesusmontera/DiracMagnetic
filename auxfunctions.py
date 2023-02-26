@@ -4,39 +4,23 @@ from numba import jit
 ##########################################################################
 #    auxiliary function input qubit spin output it's bloch vector
 ##########################################################################
-def getBlochVector(statevector):
-    alpha_real = statevector[0].real
-    alpha_imag = statevector[0].imag
-
-    if alpha_real == 0: alpha_real = 1e-20
-    
-    alpha_theta = math.atan(alpha_imag/alpha_real) 
-
-    if alpha_real < 0 and alpha_imag > 0 :
-        alpha_theta = math.atan(alpha_imag/alpha_real) + math.pi
-
-    if alpha_real < 0 and alpha_imag < 0 :
-        alpha_theta = math.atan(alpha_imag/alpha_real) + math.pi
-    r_alpha = math.sqrt((alpha_real**2) + (alpha_imag**2))
-
-    beta_real = statevector[1].real
-    beta_imag = statevector[1].imag
-    if beta_real == 0: beta_real=1e-20
-    beta_theta = math.atan(beta_imag/beta_real) 
-
-    if beta_real < 0 and beta_imag > 0 :
-        beta_theta = math.atan(beta_imag/beta_real) + math.pi
-
-    if beta_real < 0 and beta_imag < 0 :
-        beta_theta = math.atan(beta_imag/beta_real) + math.pi
-    r_beta = math.sqrt((beta_real**2) + (beta_imag**2))        
-    phi = beta_theta - alpha_theta
-    theta = 2 * np.arccos(r_alpha)
-    blochvector= np.zeros(3)
-    blochvector[0] = math.sin(theta)*math.cos(phi)
-    blochvector[1] = math.sin(theta)*math.sin(phi)
-    blochvector[2] = math.cos(theta)
-    return blochvector
+def getBlochVector(spin):
+    #compute density matrix
+    rho=np.zeros([2,2],np.complex128)
+    for i in range(2):
+        for k in range(2):
+            if i == k:
+                rho[i][k]=spin[i]**2
+            else:
+                rho[i][k]=spin[i] * np.conj(spin[k])
+            
+    a = rho[0, 0]
+    b = rho[1, 0]
+    x = 2.0 * b.real
+    y = 2.0 * b.imag
+    z = 2.0 * abs(a) - 1.0
+    bloch=np.array([x,y,z])        
+    return bloch
 def pauli4x4Matrixs():    
     p2x = np.array([[0.0, 1.0], [1.0, 0.0]],np.complex128)
     p2y = np.array([[0,-1j],[1j,0]],np.complex128)

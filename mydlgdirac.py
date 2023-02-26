@@ -16,15 +16,57 @@ class mydlgDirac(QtWidgets.QDialog):
         self.ui = Ui_DlgDiract()        
         self.ui.setupUi(self)  # Run the .setupUi() method to show the GUI
         self.ui.btPlotSpin.clicked.connect(self.PlotOGLSpin)
+        self.ui.btfront.clicked.connect(self.setspinfront)
+        self.ui.btback.clicked.connect(self.setspinback)
+        self.ui.bttop.clicked.connect(self.setspintop)
+        self.ui.btbottom.clicked.connect(self.setspinbottom)
+        self.ui.btleft.clicked.connect(self.setspinleft)
+        self.ui.btright.clicked.connect(self.setspinright)
         self.glWidget = GLBlochWidget()
         self.glWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.ui.oglblochlayout.addWidget(self.glWidget)        
-        #self.glWidget.setspacesize( 4)
-        self.glWidget.camgoto([0,0, - 25.])
+        #self.glWidget.setspacesize( 4)        
         self.PlotOGLSpin()
+    
+    def set_spin_state(self,state):
+        self.ui.txspinupreal.setText("0")
+        self.ui.txspinupimag.setText("0")
+        self.ui.txspindownreal.setText("0")
+        self.ui.txspindownimag.setText("0")        
+        if state=="0":
+            self.ui.txspinupreal.setText("1")
+        elif state=="1":
+            self.ui.txspindownreal.setText("1")
+        elif state=="+":
+            self.ui.txspinupreal.setText(str(round(1./2**0.5,4)))
+            self.ui.txspindownreal.setText(str(round(1./2**0.5,4)))
+        elif state=="-":
+            self.ui.txspinupreal.setText(str(round(1./2**0.5,4)))
+            self.ui.txspindownreal.setText(str(round(-1./2**0.5,4)))
+        elif state=="r":
+            self.ui.txspinupreal.setText(str(round(1./2**0.5,4)))
+            self.ui.txspindownimag.setText(str(round(1./2**0.5,4)))
+        elif state=="l":
+            self.ui.txspinupreal.setText(str(round(1./2**0.5,4)))
+            self.ui.txspindownimag.setText(str(round(-1./2**0.5,4)))
+        self.PlotOGLSpin()
+                            
+    def setspinfront(self):
+        self.set_spin_state("0")
+    def setspinback(self):
+        self.set_spin_state("1")
+    def setspintop(self):
+        self.set_spin_state("r")
+    def setspinbottom(self):
+        self.set_spin_state("l")
+    def setspinleft(self):
+        self.set_spin_state("-")
+    def setspinright(self):
+        self.set_spin_state("+")
         
+            
     def PlotOGLSpin(self):
-        
+        self.glWidget.camgoto([-18,0, - 18.],-45)
         spin=self.getInitialSpin()
         sdir=getBlochVector(spin)
         self.glWidget.clearArrows()

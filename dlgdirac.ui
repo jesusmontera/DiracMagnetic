@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>575</width>
-    <height>546</height>
+    <height>558</height>
    </rect>
   </property>
   <property name="font">
@@ -255,9 +255,9 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>150</y>
+     <y>140</y>
      <width>581</width>
-     <height>281</height>
+     <height>291</height>
     </rect>
    </property>
    <property name="title">
@@ -276,7 +276,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The spinors will be created from momentun with spin up in Z axis&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
-     <string>spin and spinors from kinetic</string>
+     <string>spinors from k (with spin up in Z)</string>
     </property>
     <property name="checked">
      <bool>false</bool>
@@ -448,7 +448,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>210</y>
+      <y>240</y>
       <width>181</width>
       <height>41</height>
      </rect>
@@ -470,6 +470,84 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="oglblochlayout"/>
+   </widget>
+   <widget class="QPushButton" name="bttop">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>200</y>
+      <width>51</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>top</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btbottom">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>200</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>bottom</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btleft">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>200</y>
+      <width>51</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>left</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btright">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>200</y>
+      <width>51</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>right</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btfront">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>200</y>
+      <width>51</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>front</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btback">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>200</y>
+      <width>51</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>back</string>
+    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
