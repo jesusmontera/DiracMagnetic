@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         font.setPointSize(13)
         self.txN.setFont(font)
         self.txN.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.txN.setReadOnly(False)
+        self.txN.setReadOnly(True)
         self.txN.setObjectName("txN")
         self.sliderOGL = QtWidgets.QSlider(self.centralwidget)
         self.sliderOGL.setGeometry(QtCore.QRect(10, 100, 641, 31))
@@ -136,7 +136,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuMagnetic_Field.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.sliderOGL.sliderMoved['int'].connect(self.txN.clear)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

@@ -80,7 +80,7 @@
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
     <property name="readOnly">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QSlider" name="sliderOGL">
@@ -351,22 +351,5 @@
   </action>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>sliderOGL</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>txN</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>405</x>
-     <y>562</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>366</x>
-     <y>54</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
