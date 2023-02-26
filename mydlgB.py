@@ -30,7 +30,7 @@ class Bdlg(QtWidgets.QDialog):
         
         #########  B objet and matplolib  #######################3
         
-        self.ui.btMakeB.clicked.connect(self.makeB)
+        self.ui.btMakeB.clicked.connect(self.makeB)        
                         
         self.glWidget = GLBWidget()
         self.glWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -42,20 +42,27 @@ class Bdlg(QtWidgets.QDialog):
         file , check = QtWidgets.QFileDialog.getOpenFileName(self,
                                                              "Open B npy file",
                                                              "", "npy Files (*.npy)")
-        if check:            
-            #self.parent.B.B = np.load(file,allow_pickle=True)
-            self.parent.B.load_npyFile(file)
-            self.plotB()
+        if check:                        
+            self.parent.B.load_npyFile(file)            
+##            self.parent.B.B *=10.
+##            self.RotateB()
+            self.plotB(True)
     def saveBfile(self):
         if self.parent.B.B is None: return
         file , check = QtWidgets.QFileDialog.getSaveFileName(self,
                                                   'save B npy file',
                                                   "", "npy Files (*.npy)")
         if check:
-            np.save(file, self.parent.B.B)            
+            np.save(file, self.parent.B.B)
+    
+        
     def getBiggestMag():        
         np.linalg.norm(v)
-    def plotB(self):                
+    def RotateB(self):
+        if self.parent.B.B is not None:            
+            self.parent.B.B = np.rot90(self.parent.B.B, k = 2, axes = (0, 1))
+            self.plotB()
+    def plotB(self, bfromnpy=False):                
         factoreduce=10 # reduce number of arrows so we can see then ok
         self.glWidget.clearArrows()
         color=np.array([0.8,0.,0.])
@@ -91,12 +98,15 @@ class Bdlg(QtWidgets.QDialog):
 
         minmag= np.round(np.min(magnitudes),3)
         maxmag=np.round(maxmag,3)
-        self.ui.lbinfo.setText("B magnitude from " + str(minmag) +  " to " + str(maxmag) + " " + self.parent.B.btext)
         
+        self.ui.lbinfo.setText("B magnitude from " + str(minmag) +  " to " + str(maxmag) + " " + self.parent.B.btext)
+        if bfromnpy:
+            self.ui.txmaxB.setText(str(maxmag))
         self.glWidget.update()
                                     
     
-    def makeB(self):                
+    def makeB(self):
+        
         Baxis= self.ui.listdir.currentRow()
         Bmaxmag=float(self.ui.txmaxB.text())
         self.parent.B.clear()

@@ -1,6 +1,6 @@
 import numpy as np
 from dirac_splitstep import DiracSplitStepMethod
-from auxfunctions import getBlochVector,make3DGaussian,getPsiBlochSpin,spinDotBdirac
+from auxfunctions import make3DGaussian,spinDotBdirac,pauli4x4Matrixs
 
 class myDirac3D():
     
@@ -19,18 +19,31 @@ class myDirac3D():
         self.numframes=0        
         self.bSplit=False
         self.V=np.zeros((N,N,N))
+        self.pauli4x, self.pauli4y, self.pauli4z = pauli4x4Matrixs()
+        self.initialspin=None
     def clear(self):
         self.prob=[]
         self.spins=[]
         self.numframes=0
-   
-    
+            
+        
+    def getSpinExpecValue(self,psi):
+        sa = np.sum(np.abs(psi)**2)
+        cp=np.conj(psi)
+        sx = np.sum(cp*np.einsum('ij,j...->i...', self.pauli4x, psi))/sa
+        sy = np.sum(cp*np.einsum('ij,j...->i...', self.pauli4y, psi))/sa
+        sz = np.sum(cp*np.einsum('ij,j...->i...', self.pauli4z, psi))/sa        
+        sexpec=np.real(np.array([sx,sy,sz],np.complex128))
+        n = np.linalg.norm(sexpec)
+        if n!=0:
+            sexpec/=n            
+        return sexpec
     def get_energies(self,momenta):
         C=self.C
         px, py, pz = momenta
         omega = np.sqrt(self.M**2*C**2 + px**2 + py**2 + pz**2)
         return np.array([-C*omega, -C*omega, C*omega, C*omega])
-    def get_eigenvectors(self,k):
+    def get_eigenvectors(self,L,k):
         """
         For the given momenta find the corresponding spinor
         energy eigenvectors that solves the time-independent
@@ -84,6 +97,7 @@ class myDirac3D():
             # convert spinors to ket form to merge spin to a momentum
             sinfo =" from specific spin" + str(spin) + "\n\t"
             if bPositive:
+                                
                 sinfo =" positive eigen energies "
                 c1 = pos_eig1 @ np.array([spin[0], spin[1], 0.0, 0.0]) # inner product
                 c2 = pos_eig2 @ np.array([spin[0], spin[1], 0.0, 0.0])
@@ -94,8 +108,8 @@ class myDirac3D():
                 c2 = neg_eig2 @ np.array([ 0.0, 0.0,spin[0], spin[1]])
                 spinorsketpos = c1 * np.conj(neg_eig1) + c2 * np.conj(neg_eig2)
 
-        spinorsketpos = spinorsketpos / np.linalg.norm(spinorsketpos)
-        #spin0spinors = spinQubitfromspinor(spinorsketpos,bPositive)
+        
+        spinorsketpos = spinorsketpos / np.linalg.norm(spinorsketpos)        
         print(sinfo)            
         init_spinor = [spinorsketpos[0],spinorsketpos[1],spinorsketpos[2],spinorsketpos[3] ]
         return init_spinor
@@ -147,12 +161,18 @@ class myDirac3D():
         self.prob= []
         self.spins=[]
         self.numframes=0
-        
+        self.initialspin = initial_spin
         N = self.N
         self.dt=DT
         self.bSplit=bSplit
         ones = np.ones([N,N,N], dtype=np.complex128)
         pos_eig1,pos_eig2, neg_eig1,neg_eig2 = myDirac3D.getEnergyEigenSpinors(N,L,k0,m=1.)
+        init_spinor  = myDirac3D.initspinors3D(pos_eig1,pos_eig2,neg_eig1,neg_eig2, spin=initial_spin, bPositive=True)
+        sigma=0.06
+        wavefunc = make3DGaussian(N,L, k0 , pos0,sigma)
+        #print("wf sum",np.sum(np.abs(wavefunc)**2))        
+        self.psi = wavefunc * np.multiply.outer(init_spinor, ones)
+        self.psi /= np.linalg.norm(self.psi)
         
         if bSplit:
             # split step psi is calculated at each step DT step
@@ -171,7 +191,9 @@ class myDirac3D():
             PX, PY, PZ = np.meshgrid(P, P, P) # Momenta in the x y z directions
             
             self.E = self.get_energies([PX, PY, PZ])
-            #self.U = self.get_eigenvectors([PX, PY, PZ]) # 4x4 matrix containing the eigenvectors
+##            self.U = self.get_eigenvectors(L,[PX, PY, PZ]) # 4x4 matrix containing the eigenvectors
+                                       
+                
             self.U = np.array([np.multiply.outer(neg_eig1, ones),
                                np.multiply.outer(neg_eig2, ones),
                                np.multiply.outer(pos_eig1, ones),
@@ -181,13 +203,8 @@ class myDirac3D():
             ind[0], ind[1] = ind[1], ind[0]
             self.U_DAGGER = np.conj(np.transpose(self.U, ind))
             
-        sigma=0.06
-        wavefunc = make3DGaussian(N,L, k0 , pos0,sigma)
-        initial_spin=None #np.array([0.70710678+0.j, 0.70710678+0.j],np.complex128)                        
-        init_spinor  = myDirac3D.initspinors3D(pos_eig1,pos_eig2,neg_eig1,neg_eig2, spin=initial_spin, bPositive=True) 
-        self.psi = wavefunc * np.multiply.outer(init_spinor, ones)
-        self.psi /= np.linalg.norm(self.psi)        
-        #print("wf sum",np.sum(np.abs(wavefunc)**2))        
+        
+        
         
         
         
@@ -226,30 +243,30 @@ class myDirac3D():
             psi[i] = np.fft.ifftn(psi[i])
         return psi
 
-    def doAnimFrame(self,Bmagnetic=None,modeSpin=0,Usteps=1):                
+    def doAnimFrame(self,Bmagnetic=None,Usteps=1):                
 
-        
-        for _ in range(Usteps):
-            if self.numframes>0:
+        if self.numframes>0:
+            for _ in range(Usteps):            
                 if self.bSplit:
                     self.psi = self.U(self.psi)
                 else:
                     self.psi = self.dostep(self.psi,self.dt *2. )
 
-                if Bmagnetic is not None:                
-                    spinpsibloch = getPsiBlochSpin(self.psi,modeSpin)
-                    spinDotBdirac(self.N, self.dt, self.psi,Bmagnetic, spinpsibloch)
+                if Bmagnetic is not None:                                    
+                    sbloch= self.getSpinExpecValue(self.psi)
+                    spinDotBdirac(self.N, self.dt, self.psi,Bmagnetic, sbloch)
                 self.psi /= np.linalg.norm(self.psi)
         
         # save prob in array
         self.prob.append( sum([np.abs(self.psi[i])**2 for i in range(4)]))
 
         # and save spin  in array (it's position is at  max prob)
-        p = self.prob[self.numframes]
+        p = self.prob[self.numframes]        
         posmax = np.unravel_index(p.argmax(), p.shape) # max index  from prob is spin pos
-        self.spins.append(np.array(posmax))        
-        spinpsibloch = getPsiBlochSpin(self.psi, modeSpin)            
-        self.spins.append(spinpsibloch)        
+        self.spins.append(np.array(posmax))                
+        if Bmagnetic is None or self.numframes==0:
+            sbloch= self.getSpinExpecValue(self.psi)        
+        self.spins.append(sbloch)        
         self.numframes+=1
 
     

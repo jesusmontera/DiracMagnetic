@@ -1,8 +1,12 @@
 
 
+import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from dlgdirac import Ui_DlgDiract
-import numpy as np
+from GLBlochWidget import GLBlochWidget
+from auxfunctions import getBlochVector
+
+
 
 class mydlgDirac(QtWidgets.QDialog):
     """Employee dialog."""
@@ -11,7 +15,27 @@ class mydlgDirac(QtWidgets.QDialog):
         # Create an instance of the GUI
         self.ui = Ui_DlgDiract()        
         self.ui.setupUi(self)  # Run the .setupUi() method to show the GUI
+        self.ui.btPlotSpin.clicked.connect(self.PlotOGLSpin)
+        self.glWidget = GLBlochWidget()
+        self.glWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.ui.oglblochlayout.addWidget(self.glWidget)        
+        #self.glWidget.setspacesize( 4)
+        self.glWidget.camgoto([0,0, - 25.])
+        self.PlotOGLSpin()
         
+    def PlotOGLSpin(self):
+        
+        spin=self.getInitialSpin()
+        sdir=getBlochVector(spin)
+        self.glWidget.clearArrows()
+        spos=np.array([5.,5.,5.])
+        scolor=np.array([0.,0.8,0.])
+        self.glWidget.addArrow(spos,sdir,scolor)
+        self.glWidget.update()
+        
+        
+            
+            
     def myvalidator(self,w,vmin,vmax,vdefault=0.0):        
         s=w.text()
         if s=="":
@@ -49,8 +73,7 @@ class mydlgDirac(QtWidgets.QDialog):
         return np.array([x,y,z])
     def getMaxFrames(self):
         return int(self.ui.txMaxSteps.text())
-    def getBmodeSpin(self):
-        return self.ui.listBspin.currentRow()        
+    
     def getInitialSpin(self):
         if self.ui.opcspin0.isChecked():
             return None

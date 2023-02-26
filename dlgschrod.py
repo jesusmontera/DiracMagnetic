@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_DlgSch(object):
     def setupUi(self, DlgSch):
         DlgSch.setObjectName("DlgSch")
-        DlgSch.resize(400, 393)
+        DlgSch.resize(395, 393)
         font = QtGui.QFont()
         font.setPointSize(13)
         DlgSch.setFont(font)
@@ -45,7 +45,7 @@ class Ui_DlgSch(object):
         self.txposZ.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.txposZ.setObjectName("txposZ")
         self.groupBox_K = QtWidgets.QGroupBox(DlgSch)
-        self.groupBox_K.setGeometry(QtCore.QRect(220, 20, 181, 131))
+        self.groupBox_K.setGeometry(QtCore.QRect(220, 20, 161, 131))
         self.groupBox_K.setObjectName("groupBox_K")
         self.label_4 = QtWidgets.QLabel(self.groupBox_K)
         self.label_4.setGeometry(QtCore.QRect(30, 90, 21, 17))
@@ -119,8 +119,8 @@ class Ui_DlgSch(object):
         self.txposY.setText(_translate("DlgSch", "0.0"))
         self.txposZ.setToolTip(_translate("DlgSch", "<html><head/><body><p>from -0.8 to 0.8</p></body></html>"))
         self.txposZ.setText(_translate("DlgSch", "0.0"))
-        self.groupBox_K.setToolTip(_translate("DlgSch", "<html><head/><body><p>momentum (speed) is:</p><p>p=k*2*pi / L </p></body></html>"))
-        self.groupBox_K.setTitle(_translate("DlgSch", "kinetic Energy"))
+        self.groupBox_K.setToolTip(_translate("DlgSch", "<html><head/><body><p>spatial frequency with respect to spatial extent of the simulation</p><p>p = k * np.pi / L</p></body></html>"))
+        self.groupBox_K.setTitle(_translate("DlgSch", "K  (gaussian speed)"))
         self.label_4.setText(_translate("DlgSch", "k Z"))
         self.label_5.setText(_translate("DlgSch", "k Y"))
         self.label_6.setText(_translate("DlgSch", "k X"))

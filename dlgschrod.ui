@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>395</width>
     <height>393</height>
    </rect>
   </property>
@@ -148,15 +148,15 @@
     <rect>
      <x>220</x>
      <y>20</y>
-     <width>181</width>
+     <width>161</width>
      <height>131</height>
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;momentum (speed) is:&lt;/p&gt;&lt;p&gt;p=k*2*pi / L &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;spatial frequency with respect to spatial extent of the simulation&lt;/p&gt;&lt;p&gt;p = k * np.pi / L&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>kinetic Energy</string>
+    <string>K  (gaussian speed)</string>
    </property>
    <widget class="QLabel" name="label_4">
     <property name="geometry">

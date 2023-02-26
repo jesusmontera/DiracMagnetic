@@ -26,7 +26,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.oglscale=1.0
         self.busy=False
         self.playType=""
-        self.BmodeSpin=0        
+        
         ############ add OpenGL widget to oglalyout ######################333
         self.glWidget = GLWidget()
         self.glWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -218,7 +218,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for i in range(maxframes):
             if not self.busy: break
             tstart = time()
-            obj.doAnimFrame(Bmagnetic=self.B.B , modeSpin=self.BmodeSpin)
+            obj.doAnimFrame(Bmagnetic=self.B.B )
             tframe = time()-tstart
             self.lbinfo.setText("frame " + str(i+1) + " took " + str(round(tframe,2)) + " seconds")
             QtGui.QGuiApplication.processEvents()                                                        
@@ -238,11 +238,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.radioDirac.isChecked(): # Dirac
             
             if self.dlgdirac is None:
-                self.dlgdirac = mydlgDirac(self)                
-            if self.B.B is None:                
-                self.dlgdirac.ui.listBspin.setEnabled(False)
-            else:
-                self.dlgdirac.ui.listBspin.setEnabled(True)
+                self.dlgdirac = mydlgDirac(self)                            
             
             if self.dlgdirac.exec():
                 self.schroduinger.clear()
@@ -250,8 +246,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 POS0=self.dlgdirac.getPos()
                 K0 = self.dlgdirac.getK()
                 DT=float(self.txDT.text())
-                L = float(self.txL.text())
-                self.BmodeSpin =self.dlgdirac.getBmodeSpin()
+                L = float(self.txL.text())                
                 
                 spin0 = self.dlgdirac.getInitialSpin()
                 

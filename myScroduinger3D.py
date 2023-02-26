@@ -83,7 +83,7 @@ class mySchroduinger3D():
                     #apply B contribution
                     wf[x][y][z] += inc
         #print("spinDotB mindd = ",mindd,"maxdd",maxdd)
-    def doAnimFrame(self,dt=0.01,Bmagnetic=None,modeSpin=None,Usteps=1):        
+    def doAnimFrame(self,dt=0.01,Bmagnetic=None,Usteps=1):        
                     
         for _ in range(Usteps):        
             self.data['psi'] = self.U(self.data['psi'])

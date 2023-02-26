@@ -37,20 +37,20 @@ def getBlochVector(statevector):
     blochvector[1] = math.sin(theta)*math.sin(phi)
     blochvector[2] = math.cos(theta)
     return blochvector
-def getPsiBlochSpin(psi, modespin=0):
-    if modespin==2: # positive + negative
-        up = np.sum(psi[0]) + np.sum(psi[2])
-        down = np.sum(psi[3]) + np.sum(psi[1])
-    elif modespin==0: # positive
-        up = np.sum(psi[0])  
-        down = np.sum(psi[3])
-    else: #negative 
-        up =  np.sum(psi[2])   
-        down =  np.sum(psi[1]) 
-    s=[up,down]
-    s = s /np.linalg.norm(s)                
-            
-    return getBlochVector(s)
+def pauli4x4Matrixs():    
+    p2x = np.array([[0.0, 1.0], [1.0, 0.0]],np.complex128)
+    p2y = np.array([[0,-1j],[1j,0]],np.complex128)
+    p2z = np.array([[1,0],[0,-1]],np.complex128)
+
+    p4x = np.block([[p2x, np.zeros([2, 2])],                     
+                        [np.zeros([2, 2]), p2x]])
+    p4y = np.block([[p2y, np.zeros([2, 2])],                     
+                        [np.zeros([2, 2]), p2y]])
+    p4z = np.block([[p2z, np.zeros([2, 2])],                     
+                        [np.zeros([2, 2]), p2z]])
+    
+    return p4x,p4y,p4z
+        
 
 @jit(nopython=True)
 def spinDotBdirac(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np.ndarray):    
@@ -70,24 +70,11 @@ def spinDotBdirac(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np
                     #apply B contribution
                     wf[i][x][y][z] += inc    
     
-##########################################################################
-#    auxiliary function to make 3d gaussian  
-##########################################################################
-
-##def make3DGaussian(N,L,k,pos,sigma=0.06):       
-##    X, Y, Z = np.meshgrid(L*np.linspace(-0.5, 0.5 - 1.0/N, N),
-##                          L*np.linspace(-0.5, 0.5 - 1.0/N, N),
-##                          L*np.linspace(-0.5, 0.5 - 1.0/N, N))                                                
-##    
-##    kf=np.exp(2.0j*np.pi/L*(k[1]*X/L+ k[0]*Y/L + k[2]*Z/L ))  # * 2.0j because momentum=2*Kinetic
-##    gaussian =  np.exp(-0.5*((X/L-pos[1])**2 + (Y/L-pos[0])**2 + (Z/L-pos[2])**2 )/sigma**2)*kf
-##
-##    #gaussian = gaussian/np.sqrt(np.sum(gaussian*np.conj(gaussian)))
-##    return gaussian
 def make3DGaussian(N,L,k,pos,sigma=0.06):
-    # p is momentum, k is kinetic
-    p = k * (2.0 * np.pi / L)
-    
+    # p is momentum, k is the wave number that is the# spatial frequency
+    # with respect to spatial extent of the simulation
+    #p = k * 2.0 * np.pi / L
+    p = k * np.pi / L
     print("gaussian momentum",p)
     X, Y , Z  = np.mgrid[ -L/2: L/2:N*1j, -L/2: L/2:N*1j, -L/2: L/2:N*1j]
     
