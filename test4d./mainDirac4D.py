@@ -7,6 +7,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from dirac4d import Dirac4D
 from auxfunctions import getBlochVector
+from potentials import makeYBarrier
 class PlotCanvas(FigureCanvas):
     def __init__(self, parent = None, width = 5, height = 5, dpi = 100):
         fig = Figure(figsize=(width, height), dpi=dpi)
@@ -18,13 +19,13 @@ class PlotCanvas(FigureCanvas):
         self.im=None
  
  
-    def plot(self,p1,p2):            
+    def plot(self,p):            
         if self.im is None:
-            self.im = self.axes.imshow(p1+p2,
+            self.im = self.axes.imshow(p,
                                    interpolation='bilinear',
                                    origin='lower', cmap='hot')
         else:                    
-            self.im.set_data(p1+p2)
+            self.im.set_data(p)
         self.draw()
  
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -37,9 +38,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btPlay.clicked.connect(self.funcPlay)
         self.canvasplot = PlotCanvas(self.lbogl, width=4.5, height=4.5)
         self.canvasplot.move(0,0)
-        self.dirac=None
-        
-
+        self.dirac=None        
+        self.V=None
     def funcPlay(self):
         self.busy=not self.busy        
         QtGui.QGuiApplication.processEvents()
@@ -48,8 +48,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         N=int(self.txN.text())
         L=float(self.txL.text())
-        if self.dirac is None:
-            self.dirac= Dirac4D(N)        
+        self.V = makeYBarrier(N,L*5.29177210903E-11)        
+        self.dirac= Dirac4D(N,self.V)        
                 
         pos1=np.array([float(self.txX1.text()),float(self.txY1.text())])
         pos2=np.array([float(self.txX2.text()),float(self.txY2.text())])
@@ -84,16 +84,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             print("spin2",np.round(sex[1],4))
             if i > 0:            
                 objdirac.dostep()
-            
-            p1,p2= objdirac.getProb()
-            # normalize so both plots have the same strenght()
-            max1 = np.max(p1)
-            max2 = np.max(p2)
-            print("max psi 1",max1)
-            print("max psi 2",max2)
-            p1/=max1
-            p2/=max2
-            self.canvasplot.plot(p1,p2)
+            p= objdirac.getProb()
+            self.canvasplot.plot(p)
             QtGui.QGuiApplication.processEvents()
             i+=1
             

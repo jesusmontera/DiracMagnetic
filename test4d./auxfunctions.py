@@ -58,17 +58,15 @@ def spinDotBdirac(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np
 def make2DGaussian(N,L,k,pos,sigma=0.06):
     # p is momentum, k is the wave number that is the# spatial frequency
     # with respect to spatial extent of the simulation
-    #p = k * 2.0 * np.pi / L
-    p = k * np.pi / L
-    print("gaussian momentum",p)
-    #X, Y  = np.mgrid[ -L/2: L/2:N*1j, -L/2: L/2:N*1j]
-    X, Y = np.meshgrid(L*np.linspace(-0.5, 0.5 - 1.0/N, N),
-                   L*np.linspace(-0.5, 0.5 - 1.0/N, N))
+    p = k * 2.0 * np.pi / L        
+    X = L*np.linspace(-0.5, 0.5 - 1.0/N, N)
+    X1, Y1 = np.meshgrid(X, X)
+    pf = np.exp(1j*p[0]*X1 + 1j*p[1]*Y1)
+    gaussian = pf * np.exp(-((X1/L+pos[0]/2.)/sigma)**2/2.0                                    
+                  - ((Y1/L-pos[1]/2.)/sigma)**2/2.0 )
+    #return gaussian 
+    return gaussian/np.sqrt(np.sum(gaussian*np.conj(gaussian)))
     
-    pf= np.exp(1j*p[0]*X + 1j*p[1]*Y +1j )
-    
-    gaussian = pf * np.exp( -1./(4* sigma**2) * ( (X-pos[0])**2 + (Y-pos[1])**2 ))  * np.sqrt(2*np.pi* sigma**2) 
-    return gaussian #gaussian/np.sqrt(np.sum(gaussian*np.conj(gaussian)))
 
 def getEnergyEigenSpinors(N,L,k,m=1.):
     

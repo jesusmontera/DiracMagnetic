@@ -21,13 +21,13 @@ class PlotCanvas(FigureCanvas):
         self.im=None
  
  
-    def plot(self,p1,p2):            
+    def plot(self,p):            
         if self.im is None:
-            self.im = self.axes.imshow(p1+p2,
+            self.im = self.axes.imshow(p,
                                    interpolation='bilinear',
                                    origin='lower', cmap='hot')
         else:                    
-            self.im.set_data(p1+p2)
+            self.im.set_data(p)
         self.draw()        
         
         
@@ -41,9 +41,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.busy=False
         self.btPlay.clicked.connect(self.funcPlay)
         self.canvasplot = PlotCanvas(self.lbogl, width=4.5, height=4.5)
-        self.canvasplot.move(0,0)
-        self.Vplot=None
+        self.canvasplot.move(0,0)        
         self.schrod=None
+        self.V=None
         
     def funcPlay(self):
         self.busy=not self.busy        
@@ -58,17 +58,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                        
         k1 = np.array([float(self.txKX1.text()),float(self.txKY1.text()),0.])
         k2 = np.array([float(self.txKX2.text()),float(self.txKY2.text()),0.])
-        
-        psi1 = make2DGaussian(N,L,k1,pos1)
-        psi2 = make2DGaussian(N,L,k2,pos2)
-
-        self.schrod=schrod4D(N)
+               
+        self.V = makeYBarrier(N,L*5.29177210903E-11)        
+        self.schrod=schrod4D(N,self.V)
         
         self.schrod.initialize(L,DT,pos1,pos2,k1,k2)
-        #V = makeYBarrier(N,width=4,maxval=1e32)#np.zeros([N,N,N,N])
-        #self.Vplot= np.einsum('jqik->ij', V)        
-        #self.Vplot /=np.max(self.Vplot)        
-                        
         
         # animation
         
@@ -86,15 +80,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if i > 0:            
                 schrod.dostep()
             
-            p1,p2= schrod.getProb()
-            # normalize so both plots have the same strenght()
-            max1 = np.max(p1)
-            max2 = np.max(p2)
-            print("max psi 1",max1)
-            print("max psi 2",max2)
-            p1/=max1
-            p2/=max2
-            self.canvasplot.plot(p1,p2)
+            p = schrod.getProb()
+            self.canvasplot.plot(p)
+            
             QtGui.QGuiApplication.processEvents()
             i+=1
             
