@@ -1,11 +1,13 @@
 import numpy as np
-#from dirac_splitstep import DiracSplitStepMethod
+
 from auxfunctions import make2DGaussian,pauli4x4Matrixs,getEnergyEigenSpinors,initspinors3D
+# testing to evolve with dirac split or schrodin plit( change self.bUseDiracSplit)
+from dirac_splitstep import DiracSplitStepMethod
 from splitstep import SplitStepMethod
 
 class Dirac4D():
     
-    def __init__(self,N):                
+    def __init__(self,N,V):                
         self.M = 1.0 # Mass of the particle
         self.C =  137.036 # Speed of light
         self.HBAR = 1.0
@@ -16,11 +18,12 @@ class Dirac4D():
         self.E = None        
         self.psi4d=None
         self.psi2d=None
-        self.V = None
+        self.V = V
         self.sumA=0
         self.sumB=0
         self.sumpsi2d=np.zeros([2,4],dtype=np.complex128)
-        self.pauli4x, self.pauli4y, self.pauli4z = pauli4x4Matrixs()        
+        self.pauli4x, self.pauli4y, self.pauli4z = pauli4x4Matrixs()
+        self.bUseDiracSplit=False
     def initialize(self,L,DT,pos1,pos2,k1,k2,spin1,spin2):
         
         #np.seterr(under="ignore")
@@ -46,42 +49,27 @@ class Dirac4D():
             
             wavefunc = make2DGaussian(N,L, kkk[i] , pos[i],sigma)        
             self.psi2d[i] = wavefunc * np.multiply.outer(init_spinor, ones)
-            
-            #self.psi2d[i] /= np.linalg.norm(self.psi2d[i])
-        
-        
-        
-        #
-        # get the 4d psi from the two 2d psi's
-        
+
+        # get the 4d psi from the two 2d psi's        
         self.psi4d= np.zeros([4,N,N,N,N], dtype=np.complex128)
-        self.psi2dto4d()                        
-        # test
-##        print(self.getSpinExpecValue())
-##        self.psi4dto2d()
-##        print(self.getSpinExpecValue())
-##        self.psi2dto4d()
-##        self.psi4dto2d()
-##        print(self.getSpinExpecValue())
-##        exit(0)
-        # end test
-        
+        self.psi2dto4d()                                
          # split step psi is calculated at each step DT step
         if self.V is None:                         
-            self.V = np.full([N,N,N,N],1e-30)
-        
-        #self.U = DiracSplitStepMethod(self.V, (L,L,L,L), DT*2) # units={'c': 1.0})
-        Lm=L*5.29177210903E-11
-        DTm=DT*2.4188843265857E-17
-        self.U = SplitStepMethod(self.V, (Lm, Lm,Lm, Lm), DTm) # units={'c': 1.0})
+            self.V = np.full([N,N,N,N],1e-50)
+        if self.bUseDiracSplit:
+            self.U = DiracSplitStepMethod(self.V, (L,L,L,L), DT*2) # units={'c': 1.0})
+        else:
+            Lm=L*5.29177210903E-11
+            DTm=DT*2.4188843265857E-17
+            self.U = SplitStepMethod(self.V, (Lm, Lm,Lm, Lm), DTm) # units={'c': 1.0})
 ##
     def psi2dto4d(self):
                 
         for i in range(4):
             self.sumpsi2d[0][i]=np.sum(self.psi2d[0][i])
-            self.sumpsi2d[1][i]=np.sum(self.psi2d[1][i])
-            
+            self.sumpsi2d[1][i]=np.sum(self.psi2d[1][i])            
             self.psi4d[i]=np.einsum('jq,ki->ijkq', self.psi2d[0][i], self.psi2d[1][i])
+            self.psi4d[i] =(self.psi4d[i]- np.transpose(self.psi4d[i], (1, 0, 3, 2)))/np.sqrt(2.0)
 
     def psi4dto2d(self):
         for i in range(4):
@@ -89,17 +77,16 @@ class Dirac4D():
             self.psi2d[1][i]= np.einsum('kiqj->ij', self.psi4d[i]) / self.sumpsi2d[0][i]
         
     def dostep(self):
-        for i in range(4):
-            self.psi4d[i] = self.U(self.psi4d[i])
+        if self.bUseDiracSplit:
+            self.psi4d = self.U(self.psi4d)
+        else:
+            for i in range(4):
+                self.psi4d[i] = self.U(self.psi4d[i])
         
     def getProb(self):
-        self.psi4dto2d()
-            
-        prob1 = sum([np.abs(self.psi2d[0][i])**2 for i in range(4)])
-        prob2 = sum([np.abs(self.psi2d[1][i])**2 for i in range(4)])
-        
-        return prob1,prob2
+        return sum([ np.einsum('ijkl->jk', np.abs(self.psi4d[i]))for i in range(4)])
     def getSpinExpecValue(self):
+        self.psi4dto2d()    
         sex=np.zeros([2,3],dtype=np.complex128)
         
         for i in range(2):
