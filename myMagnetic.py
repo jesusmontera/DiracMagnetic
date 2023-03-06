@@ -25,8 +25,10 @@ class magneticlass():
         self.mainArrow=[]
         self.btext="magpy"
         self.B = np.load(sfilepath)
-        
 
+                    
+                
+        
                     
             
         

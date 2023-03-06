@@ -1,6 +1,6 @@
 import numpy as np
 from splitstep import SplitStepMethod
-from auxfunctions import getBlochVector,make3DGaussian
+from auxfunctions import getBlochVector,make3DGaussian,makeBpotential
 from numba import jit
 
 class mySchroduinger3D():
@@ -14,17 +14,20 @@ class mySchroduinger3D():
         self.blochspin=np.array([1.,0.,0.])
         self.spin=[]
         self.numframes=0
-        
-    def initAnimation(self,L,DT,k0, POS0, initial_spin=None):
+        self.exp_magnetic=None
+    def initAnimation(self,L,DT,k0, POS0, initial_spin=None,B=None):
         # p si momentum
         np.seterr(under="ignore")
         
         #print("schroduinger DT in seconds",DT*2.4188843265857E-17)
         #print("schroduinger L in meters",L*5.29177210903E-11)
         Lm=L*5.29177210903E-11
-        DTm=DT*2.4188843265857E-17  
+        DTs=DT*2.4188843265857E-17  
+
+##        if B is not None:            
+##            self.exp_magnetic = makeBpotential( DTs, B.transpose((3,0,1,2)) )
         
-        self.U = SplitStepMethod(self.V, (Lm, Lm, Lm), DTm * 2.) # 4600 fix to adjust time       
+        self.U = SplitStepMethod(self.V, (Lm, Lm, Lm), DTs * 2.) # 4600 fix to adjust time       
         wavefunc = make3DGaussian(N=self.N,L=L, k=k0 , pos = POS0,sigma=0.07)
        
        
@@ -89,6 +92,7 @@ class mySchroduinger3D():
             self.data['psi'] = self.U(self.data['psi'])
             if Bmagnetic is not None:                
                 self.spinDotB(self.N, dt, self.data['psi'],Bmagnetic, self.blochspin)
+                
             self.data['psi'] /= np.linalg.norm(self.data['psi'])
                 
         # save prob in array

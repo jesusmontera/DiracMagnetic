@@ -150,8 +150,11 @@ class GLBlochWidget(QtOpenGL.QGLWidget):
         self.drawArrows()
         
   
-    def camgoto(self,campos):
+    def camgoto(self,campos, angle=None):
         self.campos=np.array(campos,np.float32)
+        if angle is not None:
+            self.camYangle=angle
+            
         self.update()
         
     

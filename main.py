@@ -9,7 +9,7 @@ from myGLutils import getOglVBOfromArray
 from mydlgogl import mydlgOgl
 
 from myDirac3D import myDirac3D # encapsulates dirac (both split step and free eigen periodic)
-
+from myPauli3D import myPauli3D # encapsulates Pauli class
 from mydlgdirac import mydlgDirac
 from myMagnetic import magneticlass
 from mydlgB import Bdlg
@@ -41,7 +41,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.maxpointsogl=3000
         
         ############  Dirac and schroduinger objects ######################333
-        self.Dirac=myDirac3D(self.N)        
+        self.Dirac=myDirac3D(self.N)
+        self.Pauli=myPauli3D(self.N)
         self.schroduinger= mySchroduinger3D(self.N)
         self.btMake.clicked.connect(self.makePSI)
         self.btPlay.clicked.connect(self.btPlayOGL)        
@@ -78,7 +79,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.sliderOGL.setRange(0, 0)
             self.glWidget.arrows=[]            
                 # add B arrow to OpenGL
-            self.glWidget.Btext=self.B.btext
+            self.glWidget.Btext=self.B.btext            
             if self.B.mainArrow  != []:                                                           
                 self.glWidget.addArrow(self.B.mainArrow[0] , self.B.mainArrow[1],[0.8,0.,0.],11.)
         else:
@@ -140,9 +141,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             animframes = self.Dirac.loadFileProb(file)
             self.restartOGLcontrols(animframes)
             print("file loaded ok with ",animframes, " frames")
-            
-            
-            
+                                    
         
     def renderOGLframe(self):
                 
@@ -152,12 +151,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if animpos < animframes:
             # probability
             if self.radioDirac.isChecked():
-                prob = self.Dirac.getProbability(animpos)
+                obj = self.Dirac
                 ss="dirac "
+            elif self.radioPauli.isChecked():
+                obj = self.Pauli
+                ss="Pauli "
             else:
-                prob = self.schroduinger.getProbability(animpos)
+                obj = self.schroduinger
                 ss="schroduinger "
-                
+
+            prob = obj.getProbability(animpos)
+            
             points, colors,npoints = getOglVBOfromArray(array3d= prob,
                                                         oglscale= self.oglscale,
                                                         minumbral=self.minumbralogl,
@@ -170,12 +174,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             self.glWidget.arrows=[]
 
-            if self.radioDirac.isChecked():
-                spinpos, spinvec = self.Dirac.getSpinbloch(animpos)                
-                
-            else:
-                spinpos, spinvec = self.schroduinger.getSpinbloch(animpos)
-
+            spinpos, spinvec = obj.getSpinbloch(animpos) 
+            
             if self.B.mainArrow != []:
                 self.glWidget.addArrow(self.B.mainArrow[0], self.B.mainArrow[1],[0.8,0.,0.],11.)                             
                 
@@ -183,7 +183,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             # paint open GL
             self.glWidget.update()
             # update label widgets in main window            
-            self.lbinfo.setText(ss + str(animpos) + " from " + str(animframes) + " OGL points =" + str(len(points)))
+            self.lbinfo.setText(ss + str(animpos) + " from " + str(animframes) +
+                                " spin ="  + str(np.round(spinvec,3)) +
+                                "\nOGL points =" + str(len(points)))
             return True
         else:
             return False
@@ -193,9 +195,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btPlay.setText("Stop")
         self.btMake.setEnabled(False)
         QtGui.QGuiApplication.processEvents()                
-        while self.renderOGLframe():
+        while self.busy:
             tstart = time()
-            if not self.busy: break
+            if not self.renderOGLframe(): break            
             animpos = self.sliderOGL.sliderPosition()
             self.sliderOGL.setSliderPosition(animpos+1)
             self.sliderOGL.update()
@@ -211,7 +213,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         QtGui.QGuiApplication.processEvents()                                                
         
     def threadmakePSI(self,obj,maxframes):
-        #obj can be Dirac or Schroduinger object
+        #obj can be Dirac Pauli or Schroduinger object
         self.animframes=0
         self.sliderOGL.setSliderPosition(0)
         self.btPlay.setEnabled(False)        
@@ -235,13 +237,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not self.busy: return
         
         i=0
-        if self.radioDirac.isChecked(): # Dirac
+        if self.radioDirac.isChecked() or  self.radioPauli.isChecked():
+            # Dirac and Pauli use the same dialog box but Pauli don't have
+            # split method so we'll hide the group box widget that choose split or eigen
             
             if self.dlgdirac is None:
                 self.dlgdirac = mydlgDirac(self)                            
-            
+
+            if self.radioPauli.isChecked():                                    
+                self.dlgdirac.ui.groupBoxMode.setVisible(False)
+                self.dlgdirac.ui.groupBoxB.setVisible(True)
+                if self.B.B is None:
+                    self.dlgdirac.setWindowTitle("Pauli options (B magnetic isn't loaded)")                
+                    self.dlgdirac.ui.groupBoxB.setEnabled(False)
+                else:
+                    self.dlgdirac.setWindowTitle("Pauli options (B magnetic is loaded)")                
+                    self.dlgdirac.ui.groupBoxB.setEnabled(True)
+                    
+            else:
+                self.dlgdirac.setWindowTitle("Dirac options")
+                self.dlgdirac.ui.groupBoxMode.setVisible(True)
+                self.dlgdirac.ui.groupBoxB.setVisible(False)
             if self.dlgdirac.exec():
                 self.schroduinger.clear()
+                self.Pauli.clear()                        
                 self.Dirac.clear()                        
                 POS0=self.dlgdirac.getPos()
                 K0 = self.dlgdirac.getK()
@@ -254,23 +273,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.btMake.setText("wait...")
                 self.lbinfo.setText("initializing Dirac, wait a few seconds")
                 QtGui.QGuiApplication.processEvents()
-                bSplit=self.dlgdirac.ui.opcSplit.isChecked()
-                self.Dirac.initAnimation(bSplit,L,DT,K0, POS0, initial_spin=spin0)
+
+                if self.radioDirac.isChecked():
+                    bSplit=self.dlgdirac.ui.opcSplit.isChecked()                
+                    self.Dirac.initAnimation(bSplit,L,DT,K0, POS0, initial_spin=spin0, B=self.B.B)
+                    thmakepsi = Thread(target=self.threadmakePSI, args=(self.Dirac,maxframes,))
+                else:
+                    if self.dlgdirac.ui.opcBpot.isChecked():
+                        Bmode="pot"
+                    else:
+                        Bmode="dot"
+                    self.Pauli.initAnimation(L,DT,K0, POS0, initial_spin=spin0,
+                                             B = self.B.B , Bmode= Bmode)
+                    thmakepsi = Thread(target=self.threadmakePSI, args=(self.Pauli,maxframes,))
+                    
                 self.btMake.setText("Stop")
                 QtGui.QGuiApplication.processEvents()
                 
-                ### thread                
-                thmakepsi = Thread(target=self.threadmakePSI, args=(self.Dirac,maxframes,))
+                ### thread                                
                 thmakepsi.start()
-                
+            else: # calcel dialog button
+                self.busy=False
             
-        else: # schroduinger
+        else: # schroduinger dialog box
             if self.dlgscho is None:
                 self.dlgscho = mydlgSch(self)                                        
             
             if self.dlgscho.exec():                
-                self.Dirac.clear()
                 self.schroduinger.clear()
+                self.Pauli.clear()                        
+                self.Dirac.clear()      
                 L = float(self.txL.text())
                 DT=float(self.txDT.text())
                 POS0=self.dlgscho.getPos()
@@ -281,10 +313,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lbinfo.setText("initializing schroduinger")
                 self.btMake.setText("Stop")
                 QtGui.QGuiApplication.processEvents()
-                # shcroduinher in meters L=1e-8,DT=5e-16
-                self.schroduinger.initAnimation(L,DT,K0, POS0, initial_spin=spinbloch)                
+                # shcroduinher in meters L=1e-8,DT=5e-16                
+                self.schroduinger.initAnimation(L,DT,K0, POS0, initial_spin=spinbloch,B=self.B.B)
                 thmakepsi = Thread(target=self.threadmakePSI, args=(self.schroduinger,maxframes,))
                 thmakepsi.start()
+            else: # calcel dialog button
+                self.busy=False
                             
         
     def btPlayOGL(self):

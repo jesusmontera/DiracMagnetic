@@ -44,7 +44,7 @@ class Bdlg(QtWidgets.QDialog):
                                                              "", "npy Files (*.npy)")
         if check:                        
             self.parent.B.load_npyFile(file)            
-##            self.parent.B.B *=10.
+            #self.parent.B.B *=2.
 ##            self.RotateB()
             self.plotB(True)
     def saveBfile(self):

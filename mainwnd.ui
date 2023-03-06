@@ -20,10 +20,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>520</x>
       <y>20</y>
       <width>131</width>
-      <height>51</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
@@ -38,10 +38,10 @@
    <widget class="QLabel" name="lbinfo">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>90</y>
-      <width>431</width>
-      <height>21</height>
+      <x>40</x>
+      <y>100</y>
+      <width>571</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -87,7 +87,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>130</y>
       <width>641</width>
       <height>31</height>
      </rect>
@@ -108,7 +108,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>10</y>
+      <y>20</y>
       <width>131</width>
       <height>61</height>
      </rect>
@@ -222,7 +222,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>170</y>
       <width>661</width>
       <height>481</height>
      </rect>
@@ -233,7 +233,7 @@
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>30</y>
+      <y>50</y>
       <width>71</width>
       <height>23</height>
      </rect>
@@ -247,14 +247,14 @@
      <string>Dirac</string>
     </property>
     <property name="checked">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QRadioButton" name="radioSchro">
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>60</y>
+      <y>80</y>
       <width>141</width>
       <height>23</height>
      </rect>
@@ -266,6 +266,27 @@
     </property>
     <property name="text">
      <string>Schroduinger</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioPauli">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>20</y>
+      <width>141</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Pauli</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
