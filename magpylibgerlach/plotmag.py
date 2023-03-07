@@ -16,7 +16,9 @@ def reduceNumberOfArrows(axes,B):
                 if j % 8 ==0:
                     for k in range(Nz):
                         if k % 8 ==0:
-                            Barrows[i][j][k]= B[i][j][k]
+                            Barrows[i][j][k][0]= B[0][i][j][k]
+                            Barrows[i][j][k][1]= B[1][i][j][k]
+                            Barrows[i][j][k][2]= B[2][i][j][k]
                             
     return Barrows
 

@@ -27,9 +27,15 @@ elif choice==choices[0]:
 elif choice==choices[1]:
     Bdir=1 # B positive down
 elif choice==choices[2]:
-    B=np.load("Bgerlach.npy")
-    print("B min",np.amin(B)," max ",np.amax(B))
-    plot_B_3D_arrows(B, L,N)    
+    import tkinter.filedialog    
+    filename = tkinter.filedialog.askopenfilename(filetypes=(        
+        ("Archivos npy", "*.npy"),        
+        ("Todos los archivos", "*.*") ))
+    print(filename)
+    if filename:            
+        B=np.load(filename)
+        print("B min",np.amin(B)," max ",np.amax(B))
+        plot_B_3D_arrows(B, L,N)    
     exit(0)
 
 def makeB3d(B,sg,L,N):    
@@ -47,8 +53,11 @@ def makeB3d(B,sg,L,N):
             if yy>maxyy: maxyy=yy
             if yy<minyy: minyy=yy
             for z in range(N):
-                zz= z * NtoLmm - Lmmhalf 
-                B[x][y][z] = sg.getB([xx,yy,zz])
+                zz= z * NtoLmm - Lmmhalf
+                vec=sg.getB([xx,yy,zz])
+                B[0][x][y][z]=vec[0]
+                B[1][x][y][z]=vec[1]
+                B[2][x][y][z]=vec[2]                
                 if zz>maxzz: maxzz=zz
                 if zz<minzz: minzz=zz
                         
@@ -90,7 +99,7 @@ if Bdir== -1:
 c = magpy.Collection(mup,mdown1,mdown2)
 displaymagpsystem(c,Lmm,10)
 print("making 3d B field (will take  5 minutes)...")
-B = np.zeros((N,N,N,3))
+B = np.zeros((3,N,N,N))
 thmakeB = Thread(target=makeB3d, args=(B,c,L,N,))
 thmakeB.start()
 thmakeB.join()
