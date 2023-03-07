@@ -55,17 +55,17 @@ class mydlgDirac(QtWidgets.QDialog):
         self.PlotOGLSpin()
                             
     def setspinfront(self):
-        self.set_spin_state("-")
-    def setspinback(self):
-        self.set_spin_state("+")
-    def setspintop(self):
-        self.set_spin_state("1")
-    def setspinbottom(self):
-        self.set_spin_state("0")
-    def setspinleft(self):
         self.set_spin_state("l")
-    def setspinright(self):
+    def setspinback(self):
         self.set_spin_state("r")
+    def setspintop(self):
+        self.set_spin_state("0")
+    def setspinbottom(self):
+        self.set_spin_state("1")
+    def setspinleft(self):
+        self.set_spin_state("-")
+    def setspinright(self):
+        self.set_spin_state("+")
         
             
     def PlotOGLSpin(self):
@@ -74,7 +74,7 @@ class mydlgDirac(QtWidgets.QDialog):
         
         s=self.glWidget.spacesize
         self.glWidget.camYangle=0.
-        self.glWidget.camgoto([s*2.1, 0,0])
+        self.glWidget.camgoto([0,0,-s*2.1])        
         
         spin=self.getInitialSpin()
         sdir=getBlochVector(spin)

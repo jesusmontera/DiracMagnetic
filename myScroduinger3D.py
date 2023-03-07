@@ -27,7 +27,7 @@ class mySchroduinger3D():
 ##        if B is not None:            
 ##            self.exp_magnetic = makeBpotential( DTs, B.transpose((3,0,1,2)) )
         
-        self.U = SplitStepMethod(self.V, (Lm, Lm, Lm), DTs * 2.) # 4600 fix to adjust time       
+        self.U = SplitStepMethod(self.V, (Lm, Lm, Lm), DTs * 2.)
         wavefunc = make3DGaussian(N=self.N,L=L, k=k0 , pos = POS0,sigma=0.07)
        
        
@@ -69,27 +69,24 @@ class mySchroduinger3D():
     def spinDotB(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np.ndarray):
         maxdd=-1e30
         mindd=1e30
-        Bvec = np.array([0.,0.,0.], np.float64)
+        
         for x in range(N):
             for y in range(N):
                 for z in range(N):                    
                     R = wf[x][y][z].real
                     I = wf[x][y][z].imag                                        
-                    # imag
-                    Bvec[0]=B[0][x][y][z]
-                    Bvec[1]=B[1][x][y][z]
-                    Bvec[2]=B[2][x][y][z]
-                    dd = spinbloch.dot(Bvec) #* prob #(/maxprob)
+                    # imag                    
+                    dd = spinbloch.dot(B[x][y][z]) 
                     if dd > maxdd:  maxdd=dd
                     if dd < mindd:  mindd=dd
                         
-                    Iinc =  dd * R * DT
+                    Iinc =  dd * R * DT * 0.5
                     #real
-                    Rdec = dd * I * DT 
+                    Rdec = dd * I * DT * 0.5
                     inc= -Rdec + Iinc *1j
                     #apply B contribution
                     wf[x][y][z] += inc
-        #print("spinDotB mindd = ",mindd,"maxdd",maxdd)
+        
     def doAnimFrame(self,dt=0.01,Bmagnetic=None,Usteps=1):        
                     
         for _ in range(Usteps):        

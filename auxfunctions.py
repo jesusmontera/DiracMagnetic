@@ -13,7 +13,10 @@ def makeBpotential(dt, B):
         return None    
     q = 1. #1.602176634e-19 #Coulombs
     a = q*np.sqrt(B[0]**2 + B[1]**2 + B[2]**2)*dt
-    nx, ny, nz = B/np.sqrt(B[0]**2 + B[1]**2 + B[2]**2)
+    d=np.sqrt(B[0]**2 + B[1]**2 + B[2]**2)
+    d[d == 0] = 1e-40    
+    
+    nx, ny, nz = B/d
     exp_magnetic = np.array([[np.cos(a) + 1.0j*nz*np.sin(a),
                               1.0j*(nx - 1.0j*ny)*np.sin(a)],
                              [1.0j*(nx + 1.0j*ny)*np.sin(a),
@@ -61,25 +64,22 @@ def pauli4x4Matrixs():
         
 
 ##########################################################################
-#   apply B vector's matrix to each of the four Dirac psi's 
+#   apply B vector's matrix to each of the four Dirac psi's  or Paulis two psi's
 ##########################################################################
 
 @jit(nopython=True)
 def spinDotB(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np.ndarray):    
 
     ni=len(wf) # dim's psi (2 pauli) ( 4 dirac)
-    Bvec = np.array([0.,0.,0.], np.float64)
+    
     for x in range(N):
         for y in range(N):
             for z in range(N):
                 for i in range(ni):
                     R = wf[i][x][y][z].real
                     I = wf[i][x][y][z].imag                                            
-                    # imag
-                    Bvec[0]=B[0][x][y][z]
-                    Bvec[1]=B[1][x][y][z]
-                    Bvec[2]=B[2][x][y][z]
-                    dd = spinbloch.dot(Bvec) #* prob #(/maxprob)
+                    # imag                    
+                    dd = spinbloch.dot(B[x][y][z]) #* prob #(/maxprob)
                     Iinc =  dd * R * DT 
                     #real
                     Rdec = dd * I * DT

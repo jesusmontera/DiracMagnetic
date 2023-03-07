@@ -44,8 +44,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.arrows=[]    
     def setspacesize(self,spacesize):
         self.spacesize = spacesize
-        self.update()
-        print("self.spacesize",self.spacesize)
+        self.update()        
     def setVBOs(self,pos_vbo,col_vbo,numpoints):
         self.pos_vbo=pos_vbo
         self.col_vbo=col_vbo
@@ -65,27 +64,29 @@ class GLWidget(QtOpenGL.QGLWidget):
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Yinc=-self.speed)
             else:
-                self.movecam(0,self.speed)                
+                self.movecam(-self.speed)                
                                                 
         elif event.key() == Qt.Key_Down:
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Yinc=self.speed)                
             else:
-                self.movecam(0,-self.speed)
+                self.movecam(self.speed)                
                 
                 
         elif event.key() == Qt.Key_Right:
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Ry=self.rotangle)
             else:
-                self.movecam(self.speed)                
+                self.movecam(0,self.speed)                
+                
                 
                                 
         elif event.key() == Qt.Key_Left:
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Ry=-self.rotangle)
             else:
-                self.movecam(-self.speed)                
+                self.movecam(0,-self.speed)
+                
                 
                 
                 
@@ -180,17 +181,16 @@ class GLWidget(QtOpenGL.QGLWidget):
         glLoadIdentity()
         # convert ogl axis(Y up x right) to matplotlib axis (Z up y right)
         # rotating 
-        #glRotate(-180., 0.0, 0.0, 1.0)
-        glRotate(90+self.camYangle, 0.0, 1.0, 0.0)            
         
+        glRotate(self.camYangle, 0.0, 1.0, 0.0)                    
         glTranslate(self.campos[0], self.campos[1], self.campos[2])
-        glRotate(90, 1.0, 0.0, 0.0)            
+        glRotate(-90, 1.0, 0.0, 0.0)            
                 
         drawCube(0,0, 0,self.spacesize/2,self.spacesize/2,self.spacesize/2)
 
         self.drawAxes()
         if self.Btext!="" and self.bTextInfo:            
-            pos = [ 0,-self.spacesize*0.7,0]
+            pos = [ -self.spacesize*0.7,0,0]
             self.drawOGLText(pos,self.Btext,fontsize=14,color=[0.9, 0, 0])
        
         if self.pos_vbo is not None:
@@ -212,8 +212,8 @@ class GLWidget(QtOpenGL.QGLWidget):
             ########################        
         else:
             if self.bTextInfo:
-                self.drawOGLText([0,self.spacesize/2,0],"OPENGL DIRAC MAGNETIC FIELD")
-                self.drawOGLText([0,self.spacesize/2,10],"Click and move with arrow keys + shift")            
+                self.drawOGLText([self.spacesize/2,0,0],"OPENGL DIRAC MAGNETIC FIELD")
+                self.drawOGLText([self.spacesize/2,0,10],"Click and move with arrow keys + shift")            
                                 
             self.drawArrows()
             

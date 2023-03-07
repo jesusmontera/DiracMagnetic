@@ -93,8 +93,10 @@ class myPauli3D():
             c1 = pos_eig1 @ np.array([spin[0], spin[1]]) # inner product
             c2 = pos_eig2 @ np.array([spin[0], spin[1]])
             spinorsketpos = c1 * np.conj(pos_eig1) + c2 * np.conj(pos_eig2)
-        
-        spinorsketpos = spinorsketpos / np.linalg.norm(spinorsketpos)        
+
+        n = np.linalg.norm(spinorsketpos)        
+        if n!=0:
+            spinorsketpos = spinorsketpos / n
         
         init_spinor = [spinorsketpos[0],spinorsketpos[1]]
         return init_spinor
@@ -143,7 +145,7 @@ class myPauli3D():
         self.Bmode=Bmode
         if B is not None and Bmode=="pot":                        
             self.exp_magnetic = makeBpotential( DT, #*2.4188843265857E-17,                                                
-                                                B) #B.transpose((0,3,1,2)) )
+                                                B.transpose((3,0,1,2)) )
                     
         ones = np.ones([N,N,N], dtype=np.complex128)
         pos_eig1,pos_eig2 = myPauli3D.getEnergyEigenSpinors(N,L,k0,m=1.)
@@ -153,7 +155,9 @@ class myPauli3D():
         wavefunc = make3DGaussian(N,L, k0 , pos0,sigma)
         #print("wf sum",np.sum(np.abs(wavefunc)**2))        
         self.psi = wavefunc * np.multiply.outer(init_spinor, ones)
-        self.psi /= np.linalg.norm(self.psi)
+        n = np.linalg.norm(self.psi)
+        if n != 0:
+            self.psi /= n
         
         
         # free periodic (psi can be calculate at any time, but because
@@ -230,8 +234,9 @@ class myPauli3D():
                         self.psi = np.einsum('ij...,j...->i...', self.exp_magnetic, self.psi)
                     else:  # with B as dot, spin don't rotate so is a botch
                         spinDotB(self.N, self.dt, self.psi,Bmagnetic, sbloch)
-                    
-                self.psi /= np.linalg.norm(self.psi)
+                n =np.linalg.norm(self.psi)                
+                if n!=0:
+                    self.psi /= n
         
         # save prob in array
         self.prob.append( sum([np.abs(self.psi[i])**2 for i in range(2)]))

@@ -34,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.glWidget.setlabelinfo(self.lbinfo)
         self.glWidget.setspacesize( self.N * self.oglscale)
         
-        self.glWidget.camgoto([self.N * self.oglscale * 2.,0,0 ])
+        self.glWidget.camgoto([0,0,-self.N * self.oglscale * 2.])
         
         #### for extracting  N OpenGL points from Dirac probability numpy array
         ### can be changed in OGL dialog launched with Play OGL
@@ -127,7 +127,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QtGui.QGuiApplication.processEvents()
             self.glWidget.camYangle=0.0
             
-            self.glWidget.camgoto([self.N * self.oglscale * 2.,0,0 ])
+            self.glWidget.camgoto([0,0,-self.N * self.oglscale * 2.])
+            
             
             self.glWidget.arrows=[]
             self.renderOGLframe()

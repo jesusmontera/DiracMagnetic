@@ -29,7 +29,8 @@ class Bdlg(QtWidgets.QDialog):
         self.glWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.ui.oglayout.addWidget(self.glWidget)        
         self.glWidget.setspacesize( parent.N * parent.oglscale)
-        self.glWidget.camgoto([parent.N * parent.oglscale * 2.,0,0 ])
+        self.glWidget.camgoto([0,0,-parent.N * parent.oglscale * 2.])
+        
         
         
     def openBfile(self):        
@@ -38,7 +39,7 @@ class Bdlg(QtWidgets.QDialog):
                                                              "", "npy Files (*.npy)")
         if check:                        
             self.parent.B.load_npyFile(file)            
-            self.parent.B.B *=4.
+            self.parent.B.B *=2.
 ##            self.RotateB()
             self.plotB(True)
     def saveBfile(self):
@@ -76,8 +77,7 @@ class Bdlg(QtWidgets.QDialog):
                         for z in range(N):
                             if z % factoreduce ==0:
                                 
-                                vdir=np.array([B[0][x][y][z],B[1][x][y][z],
-                                              B[2][x][y][z] ])  
+                                vdir=np.copy(B[x][y][z])  
                                 norm=np.linalg.norm(vdir)
                                 
                                 if self.parent.B.bInvert:

@@ -25,35 +25,29 @@ class magneticlass():
         self.mainArrow=[]
         self.btext="magpy"
         self.B = np.load(sfilepath)
-
-                    
-                
-        
-                    
-            
         
     def _makeMainArrow(self):
         
         if self.bInvert:
             if self.dirfield == self.FIELD_X:
-                vpos=np.array([0,-self.N//2-12,0])
+                vpos=np.array([0,0, self.N*0.72])
                 vdir=np.array([-1.,0.,0.])
             elif self.dirfield == self.FIELD_Y:
-                vpos=np.array([0,self.N//2+12,0])
+                vpos=np.array([ self.N*0.8,0,0])
                 vdir=np.array([0,-1,0])
                 
             elif self.dirfield == self.FIELD_Z:
-                vpos=np.array([0,-self.N//2-6,0])
+                vpos=np.array([ -self.N*0.8,0,0])
                 vdir=np.array([0,0,-1])
         else:
             if self.dirfield == self.FIELD_X:
-                vpos=np.array([0,-self.N//2-12,0])
+                vpos=np.array([0,0, self.N*0.72])
                 vdir=np.array([1,0,0])
             elif self.dirfield == self.FIELD_Y:
-                vpos=np.array([0,-self.N//2-12,0])
+                vpos=np.array([ self.N*0.8,0,0])
                 vdir=np.array([0,1,0])
             elif self.dirfield == self.FIELD_Z:
-                vpos=np.array([0,self.N//2+6,0])
+                vpos=np.array([ -self.N*0.8,0,0])
                 vdir=np.array([0,0,1.])
         self.mainArrow.append(vpos)
         self.mainArrow.append(vdir)
@@ -62,7 +56,7 @@ class magneticlass():
             
     def makeB(self,dirfield,Bmaxmag,bInvert):
         self.btext=""
-        self.B = np.zeros((3,self.N,self.N,self.N))        
+        self.B = np.zeros((self.N,self.N,self.N,3))        
         self.dirfield=dirfield
         self.Bmaxmag=Bmaxmag
         self.bInvert=bInvert
@@ -83,9 +77,7 @@ class magneticlass():
                 vv = vdir*vmag
                 for y in range(self.N):                    
                     for z in range(self.N):                        
-                        self.B[0][x][y][z]= vv[0]
-                        self.B[1][x][y][z]= vv[1]
-                        self.B[2][x][y][z]= vv[2]
+                        self.B[x][y][z]= vv
         
         elif dirfield == self.FIELD_Y:
             
@@ -99,9 +91,7 @@ class magneticlass():
                 vv = vdir*vmag
                 for x in range(self.N):                    
                     for z in range(self.N):                        
-                        self.B[0][x][y][z]= vv[0]
-                        self.B[1][x][y][z]= vv[1]
-                        self.B[2][x][y][z]= vv[2]
+                        self.B[x][y][z]= vv
         elif dirfield == self.FIELD_Z:
             if bInvert:
                 vdir=np.array([0.,0.,1])
@@ -112,9 +102,7 @@ class magneticlass():
                 vv = vdir*vmag
                 for x in range(self.N):                    
                     for y in range(self.N):                        
-                        self.B[0][x][y][z]= vv[0]
-                        self.B[1][x][y][z]= vv[1]
-                        self.B[2][x][y][z]= vv[2]
+                        self.B[x][y][z]= vv
         
         self._makeMainArrow()
         
