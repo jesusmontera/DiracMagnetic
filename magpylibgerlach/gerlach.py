@@ -54,10 +54,7 @@ def makeB3d(B,sg,L,N):
             if yy<minyy: minyy=yy
             for z in range(N):
                 zz= z * NtoLmm - Lmmhalf
-                vec=sg.getB([xx,yy,zz])
-                B[0][x][y][z]=vec[0]
-                B[1][x][y][z]=vec[1]
-                B[2][x][y][z]=vec[2]                
+                B[x][y][z]=sg.getB([xx,yy,zz])                
                 if zz>maxzz: maxzz=zz
                 if zz<minzz: minzz=zz
                         
@@ -99,14 +96,14 @@ if Bdir== -1:
 c = magpy.Collection(mup,mdown1,mdown2)
 displaymagpsystem(c,Lmm,10)
 print("making 3d B field (will take  5 minutes)...")
-B = np.zeros((3,N,N,N))
+B = np.zeros((N,N,N,3))
 thmakeB = Thread(target=makeB3d, args=(B,c,L,N,))
 thmakeB.start()
 thmakeB.join()
 if Bdir== 1:
-    np.save("BgerlachPositiveDown.npy",B)
+    np.save("BOldPositiveDown.npy",B)
 else:
-    np.save("BgerlachPositiveUp.npy",B)
+    np.save("BOldPositiveUp.npy",B)
 plot_B_3D_arrows(B, L,N)
 print("end")            
 
