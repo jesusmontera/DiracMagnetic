@@ -1,16 +1,9 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'Bdlg.ui'
-#
-# Created by: PyQt5 UI code generator 5.10.1
-#
-# WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from dlgB import Ui_Dialog
 from myMagnetic import magneticlass
 import numpy as np
-from GLBWidget import GLBWidget
+from myGLWidget import GLWidget
 class Bdlg(QtWidgets.QDialog):
     """Employee dialog."""
     def __init__(self, parent):
@@ -32,11 +25,12 @@ class Bdlg(QtWidgets.QDialog):
         
         self.ui.btMakeB.clicked.connect(self.makeB)        
                         
-        self.glWidget = GLBWidget()
+        self.glWidget = GLWidget()
         self.glWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.ui.oglayout.addWidget(self.glWidget)        
         self.glWidget.setspacesize( parent.N * parent.oglscale)
-        self.glWidget.camgoto([0,0, - parent.N * parent.oglscale * 2])
+        self.glWidget.camgoto([parent.N * parent.oglscale * 2.,0,0 ])
+        
         
     def openBfile(self):        
         file , check = QtWidgets.QFileDialog.getOpenFileName(self,
@@ -44,7 +38,7 @@ class Bdlg(QtWidgets.QDialog):
                                                              "", "npy Files (*.npy)")
         if check:                        
             self.parent.B.load_npyFile(file)            
-            #self.parent.B.B *=2.
+            self.parent.B.B *=4.
 ##            self.RotateB()
             self.plotB(True)
     def saveBfile(self):
@@ -73,21 +67,25 @@ class Bdlg(QtWidgets.QDialog):
         magnitudes=np.zeros(maxarrows)
         numarrows=0
         # add the arrows to glwidget
+        B = self.parent.B.B
+        wc=self.glWidget.spacesize/2.
         for x in range (N):
             if x % factoreduce ==0:
                 for y in range(N):
                     if y % factoreduce ==0:
                         for z in range(N):
                             if z % factoreduce ==0:
-                                vdir=np.copy(self.parent.B.B[x][y][z])                                
+                                
+                                vdir=np.array([B[0][x][y][z],B[1][x][y][z],
+                                              B[2][x][y][z] ])  
                                 norm=np.linalg.norm(vdir)
                                 
                                 if self.parent.B.bInvert:
                                     vdir*=-1
                                     
                                 if norm > 0:                                                                        
-                                    pos=np.array([x,y,z])
-                                    self.glWidget.addArrow(pos, vdir/norm, color)
+                                    pos=np.array([x-wc,y-wc,z-wc])
+                                    self.glWidget.addArrow(pos, vdir/norm, color,1.)
                                     magnitudes[numarrows]=norm
                                     numarrows+=1
         #now scale the arrows

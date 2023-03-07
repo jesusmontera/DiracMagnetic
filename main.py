@@ -33,7 +33,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.oglalyout.addWidget(self.glWidget)
         self.glWidget.setlabelinfo(self.lbinfo)
         self.glWidget.setspacesize( self.N * self.oglscale)
-        self.glWidget.camgoto([0,0, - self.N * self.oglscale * 2])
+        
+        self.glWidget.camgoto([self.N * self.oglscale * 2.,0,0 ])
+        
         #### for extracting  N OpenGL points from Dirac probability numpy array
         ### can be changed in OGL dialog launched with Play OGL
         self.minumbralogl=0.0002
@@ -124,7 +126,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lbinfo.setText("Loaded ok. animation pos 0 from " + str(animframes))
             QtGui.QGuiApplication.processEvents()
             self.glWidget.camYangle=0.0
-            self.glWidget.camgoto([0,0, - self.N * self.oglscale * 2])
+            
+            self.glWidget.camgoto([self.N * self.oglscale * 2.,0,0 ])
+            
             self.glWidget.arrows=[]
             self.renderOGLframe()
             self.btPlay.setEnabled(True)

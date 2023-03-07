@@ -69,13 +69,17 @@ class mySchroduinger3D():
     def spinDotB(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np.ndarray):
         maxdd=-1e30
         mindd=1e30
+        Bvec = np.array([0.,0.,0.], np.float64)
         for x in range(N):
             for y in range(N):
                 for z in range(N):                    
                     R = wf[x][y][z].real
                     I = wf[x][y][z].imag                                        
                     # imag
-                    dd = spinbloch.dot(B[x][y][z]) #* prob #(/maxprob)
+                    Bvec[0]=B[0][x][y][z]
+                    Bvec[1]=B[1][x][y][z]
+                    Bvec[2]=B[2][x][y][z]
+                    dd = spinbloch.dot(Bvec) #* prob #(/maxprob)
                     if dd > maxdd:  maxdd=dd
                     if dd < mindd:  mindd=dd
                         

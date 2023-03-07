@@ -68,7 +68,7 @@ def pauli4x4Matrixs():
 def spinDotB(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np.ndarray):    
 
     ni=len(wf) # dim's psi (2 pauli) ( 4 dirac)
-    
+    Bvec = np.array([0.,0.,0.], np.float64)
     for x in range(N):
         for y in range(N):
             for z in range(N):
@@ -76,7 +76,10 @@ def spinDotB(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np.ndar
                     R = wf[i][x][y][z].real
                     I = wf[i][x][y][z].imag                                            
                     # imag
-                    dd = spinbloch.dot(B[x][y][z])
+                    Bvec[0]=B[0][x][y][z]
+                    Bvec[1]=B[1][x][y][z]
+                    Bvec[2]=B[2][x][y][z]
+                    dd = spinbloch.dot(Bvec) #* prob #(/maxprob)
                     Iinc =  dd * R * DT 
                     #real
                     Rdec = dd * I * DT
@@ -87,8 +90,8 @@ def spinDotB(N: int, DT: float, wf: np.ndarray,B: np.ndarray, spinbloch: np.ndar
 def make3DGaussian(N,L,k,pos,sigma=0.06):
     # p is momentum, k is the wave number that is the# spatial frequency
     # with respect to spatial extent of the simulation
-    #p = k * 2.0 * np.pi / L
-    p = k * np.pi / L
+    p = k * 2.0 * np.pi / L
+    #p = k * np.pi / L
     print("gaussian momentum",p)
     X, Y , Z  = np.mgrid[ -L/2: L/2:N*1j, -L/2: L/2:N*1j, -L/2: L/2:N*1j]
     

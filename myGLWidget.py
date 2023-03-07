@@ -20,11 +20,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.labelinfo=None
         self.arrows=[]
         self.Btext=""
+        self.bTextInfo=True
         # camera speed for rotating and moving
         self.rotangle=3.0
         self.speed=2.0
         QtOpenGL.QGLWidget.__init__(self, self.parent)
-                
+    def setTextInfo(self,bShow):
+        self.bTextInfo=bShow
+        
     def drawOGLText(self,pos,text,fontsize=12, color=[1.,1.,1.]):
         glPushMatrix ()        
         glTranslate(-pos[0], -pos[1], -pos[2])
@@ -34,9 +37,11 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.renderText(0,0,0,text,font)
         glPopMatrix ()
         
+    def scaleArrow(self,na,s):
+        self.arrows[na*4+3]*=s
     
-    
-        
+    def clearArrows(self):
+        self.arrows=[]    
     def setspacesize(self,spacesize):
         self.spacesize = spacesize
         self.update()
@@ -57,26 +62,31 @@ class GLWidget(QtOpenGL.QGLWidget):
         
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            if event.modifiers() == Qt.ShiftModifier:                
-                self.movecam(Yinc=-self.speed)
+            if event.modifiers() == Qt.ShiftModifier:
+                self.movecam(-self.speed)                
             else:
-                self.movecam(-self.speed)                                
+                self.movecam(0,self.speed)                
+                                                
         elif event.key() == Qt.Key_Down:
-            if event.modifiers() == Qt.ShiftModifier:                
-                self.movecam(Yinc=self.speed)
+            if event.modifiers() == Qt.ShiftModifier:
+                self.movecam(self.speed)                
             else:
-                self.movecam(self.speed)
+                self.movecam(0,-self.speed)
+                
                 
         elif event.key() == Qt.Key_Right:
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Ry=self.rotangle)
             else:
-                self.movecam(0,self.speed)                
+                self.movecam(Yinc=-self.speed)
+                                
         elif event.key() == Qt.Key_Left:
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Ry=-self.rotangle)
             else:
-                self.movecam(0,-self.speed)
+                self.movecam(Yinc=self.speed)
+                
+                
                 
     def setlabelinfo(self, labelinfo):
         self.labelinfo=labelinfo
@@ -125,6 +135,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.update()
         if self.labelinfo is not None:            
             self.labelinfo.setText(str(np.round(self.campos,1)))
+
+    def drawArrows(self):
+        for i in range(len( self.arrows)//4):
+            self.drawArrow(i)
             
     def drawArrow(self,i):
         
@@ -162,14 +176,18 @@ class GLWidget(QtOpenGL.QGLWidget):
                 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)                
         glLoadIdentity()
-        glRotate(self.camYangle, 0.0, 1.0, 0.0)            
+        # convert ogl axis(Y up x right) to matplotlib axis (Z up y right)
+        # rotating 
+        #glRotate(-180., 0.0, 0.0, 1.0)
+        glRotate(90+self.camYangle, 0.0, 1.0, 0.0)            
+        glRotate(90, 1.0, 0.0, 0.0)            
         glTranslate(self.campos[0], self.campos[1], self.campos[2])
                 
         drawCube(0,0, 0,self.spacesize/2,self.spacesize/2,self.spacesize/2)
 
         self.drawAxes()
-        if self.Btext!="":            
-            pos = [ -self.spacesize/2-4 , 0 , -self.spacesize/2]
+        if self.Btext!="" and self.bTextInfo:            
+            pos = [ 0,-self.spacesize*0.7,0]
             self.drawOGLText(pos,self.Btext,fontsize=14,color=[0.9, 0, 0])
        
         if self.pos_vbo is not None:
@@ -190,9 +208,11 @@ class GLWidget(QtOpenGL.QGLWidget):
             
             ########################        
         else:
-            self.drawOGLText([self.spacesize/3,0,-self.spacesize/2],"OPENGL DIRAC MAGNETIC FIELD")
-            self.drawOGLText([self.spacesize/3,10,-self.spacesize/2],"Click and move with arrow keys + shift")            
-            self.drawArrow(0) # B arrow            
+            if self.bTextInfo:
+                self.drawOGLText([0,self.spacesize/2,0],"OPENGL DIRAC MAGNETIC FIELD")
+                self.drawOGLText([0,self.spacesize/2,10],"Click and move with arrow keys + shift")            
+                                
+            self.drawArrows()
             
 
         

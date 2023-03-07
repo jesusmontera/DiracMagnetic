@@ -3,7 +3,7 @@
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from dlgdirac import Ui_DlgDiract
-from GLBlochWidget import GLBlochWidget
+from myGLWidget import GLWidget
 from auxfunctions import getBlochVector
 
 
@@ -22,10 +22,13 @@ class mydlgDirac(QtWidgets.QDialog):
         self.ui.btbottom.clicked.connect(self.setspinbottom)
         self.ui.btleft.clicked.connect(self.setspinleft)
         self.ui.btright.clicked.connect(self.setspinright)
-        self.glWidget = GLBlochWidget()
+        self.glWidget = GLWidget()
         self.glWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.ui.oglblochlayout.addWidget(self.glWidget)        
-        #self.glWidget.setspacesize( 4)        
+        self.ui.oglblochlayout.addWidget(self.glWidget)
+        self.glWidget.setTextInfo( False)
+        self.glWidget.setspacesize( 34)
+        
+        
         self.PlotOGLSpin()
     
     def set_spin_state(self,state):
@@ -52,25 +55,31 @@ class mydlgDirac(QtWidgets.QDialog):
         self.PlotOGLSpin()
                             
     def setspinfront(self):
-        self.set_spin_state("0")
-    def setspinback(self):
-        self.set_spin_state("1")
-    def setspintop(self):
-        self.set_spin_state("r")
-    def setspinbottom(self):
-        self.set_spin_state("l")
-    def setspinleft(self):
         self.set_spin_state("-")
-    def setspinright(self):
+    def setspinback(self):
         self.set_spin_state("+")
+    def setspintop(self):
+        self.set_spin_state("1")
+    def setspinbottom(self):
+        self.set_spin_state("0")
+    def setspinleft(self):
+        self.set_spin_state("l")
+    def setspinright(self):
+        self.set_spin_state("r")
         
             
     def PlotOGLSpin(self):
-        self.glWidget.camgoto([-18,0, - 18.],-45)
+
+
+        
+        s=self.glWidget.spacesize
+        self.glWidget.camYangle=0.
+        self.glWidget.camgoto([s*2.1, 0,0])
+        
         spin=self.getInitialSpin()
         sdir=getBlochVector(spin)
         self.glWidget.clearArrows()
-        spos=np.array([5.,5.,5.])
+        spos=np.array([0,0,0])
         scolor=np.array([0.,0.8,0.])
         self.glWidget.addArrow(spos,sdir,scolor)
         self.glWidget.update()

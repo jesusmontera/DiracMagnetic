@@ -71,10 +71,9 @@ class myPauli3D():
         # Positive energy solutions
         
         pos_eig1 = [pz*(mc + omega)/den2, 
-                    (mc*px - 1.0j*mc*py + (px - 1.0j*py)*omega)/den2,
-                    p2/den2, zeros]    
+                    (mc*px - 1.0j*mc*py + (px - 1.0j*py)*omega)/den2]    
         pos_eig2 = [(mc*px + 1.0j*mc*py + (px + 1.0j*py)*omega)/den2,
-                    -pz*(mc + omega)/den2, zeros, p2/den2]
+                    -pz*(mc + omega)/den2]
         
         
         return np.array([pos_eig1, pos_eig2])
@@ -141,10 +140,10 @@ class myPauli3D():
         self.initialspin = initial_spin
         N = self.N
         self.dt=DT
-        if B is not None and Bmode=="pot":
-            self.Bmode=Bmode
-            self.exp_magnetic = makeBpotential( DT, #*2.4188843265857E-17,
-                                                B.transpose((3,0,1,2)) )
+        self.Bmode=Bmode
+        if B is not None and Bmode=="pot":                        
+            self.exp_magnetic = makeBpotential( DT, #*2.4188843265857E-17,                                                
+                                                B) #B.transpose((0,3,1,2)) )
                     
         ones = np.ones([N,N,N], dtype=np.complex128)
         pos_eig1,pos_eig2 = myPauli3D.getEnergyEigenSpinors(N,L,k0,m=1.)
@@ -169,7 +168,7 @@ class myPauli3D():
         PX, PY, PZ = np.meshgrid(P, P, P) # Momenta in the x y z directions
         
         self.E = self.get_energies([PX, PY, PZ])
-##      self.U = self.get_eigenvectors(L,[PX, PY, PZ]) # 2x2 matrix containing the eigenvectors
+#        self.U = self.get_eigenvectors(L,[PX, PY, PZ]) # 2x2 matrix containing the eigenvectors
                                                
         self.U = np.array([np.multiply.outer(pos_eig1, ones),
                            np.multiply.outer(pos_eig2, ones)])

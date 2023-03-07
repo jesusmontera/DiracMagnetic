@@ -103,7 +103,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
-     <string>-0.7</string>
+     <string>0.0</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -122,7 +122,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
-     <string>0.0</string>
+     <string>-0.7</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -212,7 +212,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>22</string>
+     <string>0</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -228,7 +228,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0</string>
+     <string>20</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -314,7 +314,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.5</string>
+     <string>1</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -349,7 +349,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.3</string>
+     <string>0</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -397,7 +397,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.0</string>
+     <string>0</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -435,7 +435,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.5</string>
+     <string>0</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
