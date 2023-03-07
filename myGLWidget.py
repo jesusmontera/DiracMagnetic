@@ -63,13 +63,13 @@ class GLWidget(QtOpenGL.QGLWidget):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
             if event.modifiers() == Qt.ShiftModifier:
-                self.movecam(-self.speed)                
+                self.movecam(Yinc=-self.speed)
             else:
                 self.movecam(0,self.speed)                
                                                 
         elif event.key() == Qt.Key_Down:
             if event.modifiers() == Qt.ShiftModifier:
-                self.movecam(self.speed)                
+                self.movecam(Yinc=self.speed)                
             else:
                 self.movecam(0,-self.speed)
                 
@@ -78,13 +78,15 @@ class GLWidget(QtOpenGL.QGLWidget):
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Ry=self.rotangle)
             else:
-                self.movecam(Yinc=-self.speed)
+                self.movecam(self.speed)                
+                
                                 
         elif event.key() == Qt.Key_Left:
             if event.modifiers() == Qt.ShiftModifier:
                 self.movecam(Ry=-self.rotangle)
             else:
-                self.movecam(Yinc=self.speed)
+                self.movecam(-self.speed)                
+                
                 
                 
                 
@@ -180,8 +182,9 @@ class GLWidget(QtOpenGL.QGLWidget):
         # rotating 
         #glRotate(-180., 0.0, 0.0, 1.0)
         glRotate(90+self.camYangle, 0.0, 1.0, 0.0)            
-        glRotate(90, 1.0, 0.0, 0.0)            
+        
         glTranslate(self.campos[0], self.campos[1], self.campos[2])
+        glRotate(90, 1.0, 0.0, 0.0)            
                 
         drawCube(0,0, 0,self.spacesize/2,self.spacesize/2,self.spacesize/2)
 
