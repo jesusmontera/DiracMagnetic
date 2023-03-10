@@ -66,7 +66,7 @@
   <widget class="QPushButton" name="btMakeB">
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>400</x>
      <y>40</y>
      <width>89</width>
      <height>61</height>
@@ -93,7 +93,7 @@
      <x>270</x>
      <y>40</y>
      <width>121</width>
-     <height>61</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="currentRow">
@@ -150,19 +150,6 @@
    </property>
    <property name="text">
     <string>info</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkInvert">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>110</y>
-     <width>191</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>invert poles (flow)</string>
    </property>
   </widget>
  </widget>

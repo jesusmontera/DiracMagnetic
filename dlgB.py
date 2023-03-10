@@ -28,7 +28,7 @@ class Ui_Dialog(object):
         self.txmaxB.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.txmaxB.setObjectName("txmaxB")
         self.btMakeB = QtWidgets.QPushButton(Dialog)
-        self.btMakeB.setGeometry(QtCore.QRect(390, 40, 89, 61))
+        self.btMakeB.setGeometry(QtCore.QRect(400, 40, 89, 61))
         self.btMakeB.setObjectName("btMakeB")
         self.verticalLayoutWidget = QtWidgets.QWidget(Dialog)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(40, 160, 591, 481))
@@ -37,7 +37,7 @@ class Ui_Dialog(object):
         self.oglayout.setContentsMargins(0, 0, 0, 0)
         self.oglayout.setObjectName("oglayout")
         self.listdir = QtWidgets.QListWidget(Dialog)
-        self.listdir.setGeometry(QtCore.QRect(270, 40, 121, 61))
+        self.listdir.setGeometry(QtCore.QRect(270, 40, 121, 71))
         self.listdir.setObjectName("listdir")
         item = QtWidgets.QListWidgetItem()
         self.listdir.addItem(item)
@@ -57,9 +57,6 @@ class Ui_Dialog(object):
         self.lbinfo = QtWidgets.QLabel(Dialog)
         self.lbinfo.setGeometry(QtCore.QRect(60, 140, 511, 17))
         self.lbinfo.setObjectName("lbinfo")
-        self.checkInvert = QtWidgets.QCheckBox(Dialog)
-        self.checkInvert.setGeometry(QtCore.QRect(270, 110, 191, 23))
-        self.checkInvert.setObjectName("checkInvert")
 
         self.retranslateUi(Dialog)
         self.listdir.setCurrentRow(2)
@@ -84,5 +81,4 @@ class Ui_Dialog(object):
         self.listdir.setSortingEnabled(__sortingEnabled)
         self.label_2.setText(_translate("Dialog", "magnetic flow in"))
         self.lbinfo.setText(_translate("Dialog", "info"))
-        self.checkInvert.setText(_translate("Dialog", "invert poles (flow)"))
 

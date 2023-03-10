@@ -39,7 +39,7 @@ class Bdlg(QtWidgets.QDialog):
                                                              "", "npy Files (*.npy)")
         if check:                        
             self.parent.B.load_npyFile(file)            
-            self.parent.B.B *=2.
+            #self.parent.B.B *=4.
 ##            self.RotateB()
             self.plotB(True)
     def saveBfile(self):
@@ -75,15 +75,11 @@ class Bdlg(QtWidgets.QDialog):
                 for y in range(N):
                     if y % factoreduce ==0:
                         for z in range(N):
-                            if z % factoreduce ==0:
-                                
+                            if z % factoreduce ==0:                                
                                 vdir=np.copy(B[x][y][z])  
-                                norm=np.linalg.norm(vdir)
-                                
-                                if self.parent.B.bInvert:
-                                    vdir*=-1
-                                    
-                                if norm > 0:                                                                        
+                                norm=np.linalg.norm(vdir)                                                                
+                                if norm > 0:
+                                    #vdir*=-1.    
                                     pos=np.array([x-wc,y-wc,z-wc])
                                     self.glWidget.addArrow(pos, vdir/norm, color,1.)
                                     magnitudes[numarrows]=norm
@@ -108,10 +104,8 @@ class Bdlg(QtWidgets.QDialog):
         Baxis= self.ui.listdir.currentRow()
         Bmaxmag=float(self.ui.txmaxB.text())
         self.parent.B.clear()
-        self.ui.lbinfo.setText("Making magnetic B array of vectors")
-        
-        bInvert=self.ui.checkInvert.isChecked()
-        self.parent.B.makeB(Baxis,Bmaxmag,bInvert)                
+        self.ui.lbinfo.setText("Making magnetic B array of vectors")                
+        self.parent.B.makeB(Baxis,Bmaxmag)                
         self.plotB()
         
         
