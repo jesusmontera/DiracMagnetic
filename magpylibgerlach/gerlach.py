@@ -72,7 +72,7 @@ def makeB3d(B,sg,L,N):
     
 borlenmm = 5.29177210903E-8 ## in milimeters
 Lmm= L * borlenmm # space length in mm
-B0=1500. # militeslas
+B0=5000. # militeslas
 
 ### upper
 mup = magpy.source.magnet.Box(mag=[0, -B0*Bdir, -B0*Bdir], dim=[Lmm*6, Lmm*2, Lmm*2],
@@ -101,9 +101,9 @@ thmakeB = Thread(target=makeB3d, args=(B,c,L,N,))
 thmakeB.start()
 thmakeB.join()
 if Bdir== 1:
-    np.save("BOldPositiveDown.npy",B)
+    np.save("BPositiveDown.npy",B)
 else:
-    np.save("BOldPositiveUp.npy",B)
+    np.save("BPositiveUp.npy",B)
 plot_B_3D_arrows(B, L,N)
 print("end")            
 
