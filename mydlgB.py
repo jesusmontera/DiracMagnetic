@@ -4,6 +4,7 @@ from dlgB import Ui_Dialog
 from myMagnetic import magneticlass
 import numpy as np
 from myGLWidget import GLWidget
+import matplotlib.pyplot as plt
 class Bdlg(QtWidgets.QDialog):
     """Employee dialog."""
     def __init__(self, parent):
@@ -100,13 +101,41 @@ class Bdlg(QtWidgets.QDialog):
                                     
     
     def makeB(self):
-        
-        Baxis= self.ui.listdir.currentRow()
+        sResult=""
         Bmaxmag=float(self.ui.txmaxB.text())
-        self.parent.B.clear()
-        self.ui.lbinfo.setText("Making magnetic B array of vectors")                
-        self.parent.B.makeB(Baxis,Bmaxmag)                
-        self.plotB()
+        self.ui.btMakeB.setText("wait")
+        self.ui.lbinfo.setText("Making magnetic B array of vectors...wait")        
+        QtGui.QGuiApplication.processEvents()
+        if self.ui.opcBApp.isChecked():            
+            Baxis= self.ui.listdir.currentRow()            
+            self.parent.B.clear()            
+            self.parent.B.makeB(Baxis,Bmaxmag)            
+            self.plotB()
+            sResult="B maked ok "
+        else:
+            try:
+                plt.close()
+                from BmagpyGerlachZ import MakeBmagpyZ
+                L_au=float(self.parent.txL.text())
+                self.parent.B.B = MakeBmagpyZ(N = self.parent.N,                                                   
+                                                   L_au= L_au,
+                                                   B0 = Bmaxmag, Bdir=-1)
+                
+                sResult="B magpy non uniform field in Z maked ok "
+                self.plotB()
+                self.parent.B.mainArrow=[]
+                self.parent.B.btext="magpy"
+                
+            except ImportError:
+                print("ERROR :exception becuase u don't have magpylib")
+                print("solution: load the npy sample file BgerlachZ.npy with the menu")
+                sResult="error: try loading BgerlachZ.npy with the menu"
+                pass
+        self.ui.btMakeB.setText("Make B")
+        self.ui.lbinfo.setText(sResult)
+        print("end making B")
+            
+        
         
         
     

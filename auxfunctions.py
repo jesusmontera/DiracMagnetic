@@ -29,14 +29,8 @@ def makeBpotential(dt, B):
 ##########################################################################
                 
 def getBlochVector(spin):
-    #compute density matrix
-    rho=np.zeros([2,2],np.complex128)
-    for i in range(2):
-        for k in range(2):
-            if i == k:
-                rho[i][k]=spin[i]**2
-            else:
-                rho[i][k]=spin[i] * np.conj(spin[k])
+    
+    rho = np.outer(spin, np.conj(spin)) #compute density matrix
             
     a = rho[0, 0]
     b = rho[1, 0]

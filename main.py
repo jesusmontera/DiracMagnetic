@@ -7,7 +7,7 @@ from mainwnd import Ui_MainWindow
 from myGLWidget import GLWidget
 from myGLutils import getOglVBOfromArray
 from mydlgogl import mydlgOgl
-
+import matplotlib.pyplot as plt
 from myDirac3D import myDirac3D # encapsulates dirac (both split step and free eigen periodic)
 from myPauli3D import myPauli3D # encapsulates Pauli class
 from mydlgdirac import mydlgDirac
@@ -70,7 +70,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def showDlgB(self):
         # magnetic file dialog                       
         if self.dlgmag is None:            
-            self.dlgmag= Bdlg(self)
+            self.dlgmag= Bdlg(self)            
         Bbefore = self.B.B
         if self.dlgmag.exec():            
             self.schroduinger.clear()
@@ -86,7 +86,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.glWidget.addArrow(self.B.mainArrow[0] , self.B.mainArrow[1],[0.8,0.,0.],11.)
         else:
             self.B.B=Bbefore
-            
+        plt.close()
         self.glWidget.update()
         
                                         

@@ -87,7 +87,7 @@ class myPauli3D():
             print("init spinors from momentum with Z up")
         else:        
             # if initial spin is requiered  make spinors for that specific spin
-            # convert spinors to ket form to merge spin to a momentum
+            # convert spinors to ket form to merge spin with momentum
             print("init spinors from specific spin" , np.round(spin,3),
                   "\n\tinitial spin Bloch = ",np.round(getBlochVector(spin),3))
             c1 = pos_eig1 @ np.array([spin[0], spin[1]]) # inner product
