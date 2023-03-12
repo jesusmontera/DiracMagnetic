@@ -1,2 +1,0 @@
-create a magnet field similar to gerlach machine using magpylib(version 2.3  install with pip3 under python 3.6 )
-and save to npy file that can be loaded in dirac app with menu magnet->magnet window-> menu load file
