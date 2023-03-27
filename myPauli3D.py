@@ -1,7 +1,6 @@
 import numpy as np
-from dirac_splitstep import DiracSplitStepMethod
-from auxfunctions import make3DGaussian,spinDotB,pauli2x2Matrixs,makeBpotential,getBlochVector
-
+from auxfunctions import make3DGaussian,spinDotB,pauli2x2Matrixs,makeBpotential,getBlochVector,applyDotMatrix3D
+from splitstep import SplitStepMethod
 class myPauli3D():
     
     def __init__(self,N):                
@@ -21,9 +20,15 @@ class myPauli3D():
         self.initialspin=None
         self.exp_magnetic=None # B magnetic potential
         self.Bmode ="pot"
+        self.V = None
+        self.bUseSplit=False # set manually because is not implement in graphic interface
     def clear(self):
         self.prob=[]
+        self.U = None
+        self.U_DAGGER = None
+        self.E = None        
         self.psi=None
+        self.V=None
         self.spins=[]
         self.exp_magnetic=None
         self.numframes=0
@@ -36,9 +41,9 @@ class myPauli3D():
         sy = np.sum(cp*np.einsum('ij,j...->i...', self.pauli2y, psi))/sa
         sz = np.sum(cp*np.einsum('ij,j...->i...', self.pauli2z, psi))/sa        
         sexpec=np.real(np.array([sx,sy,sz],np.complex128))
-        n = np.linalg.norm(sexpec)
-        if n!=0:
-            sexpec/=n            
+##        n = np.linalg.norm(sexpec)
+##        if n!=0:
+##            sexpec/=n            
         return sexpec
     
     def get_energies(self,momenta):
@@ -57,8 +62,7 @@ class myPauli3D():
         #px, py, pz = momenta
         p2 = px**2 + py**2 + pz**2
         p = np.sqrt(p2)
-        mc = self.M*self.C
-        zeros = np.zeros(3*[self.N], dtype=np.complex128)
+        mc = self.M*self.C        
         omega = np.sqrt(mc*mc + p2) # Corresponds to E/c
 
         # Temporary variable used for
@@ -74,7 +78,7 @@ class myPauli3D():
                     (mc*px - 1.0j*mc*py + (px - 1.0j*py)*omega)/den2]    
         pos_eig2 = [(mc*px + 1.0j*mc*py + (px + 1.0j*py)*omega)/den2,
                     -pz*(mc + omega)/den2]
-        
+
         
         return np.array([pos_eig1, pos_eig2])
 
@@ -83,8 +87,9 @@ class myPauli3D():
         
         if spin is None:
             # if no initial spin is requiered  it will point to Z up
-            spinorsketpos = np.array([pos_eig1[1], pos_eig1[2]])
+            spinorsketpos = np.array([pos_eig1[1], pos_eig1[0]])            
             print("init spinors from momentum with Z up")
+            
         else:        
             # if initial spin is requiered  make spinors for that specific spin
             # convert spinors to ket form to merge spin with momentum
@@ -93,12 +98,14 @@ class myPauli3D():
             c1 = pos_eig1 @ np.array([spin[0], spin[1]]) # inner product
             c2 = pos_eig2 @ np.array([spin[0], spin[1]])
             spinorsketpos = c1 * np.conj(pos_eig1) + c2 * np.conj(pos_eig2)
+            
 
         n = np.linalg.norm(spinorsketpos)        
         if n!=0:
             spinorsketpos = spinorsketpos / n
         
         init_spinor = [spinorsketpos[0],spinorsketpos[1]]
+        
         return init_spinor
     @staticmethod
     def getEnergyEigenSpinors(N,L,k,m=1.):
@@ -136,25 +143,27 @@ class myPauli3D():
     def initAnimation(self,L,DT,k0, pos0,initial_spin=None, B=None,Bmode="pot"):
         
         np.seterr(under="ignore")
-        self.prob= []
-        self.spins=[]
-        self.numframes=0
+        self.clear()
         self.initialspin = initial_spin
         N = self.N
         self.dt=DT
         self.Bmode=Bmode
-        if B is not None and Bmode=="pot":                        
-            self.exp_magnetic = makeBpotential( DT, #*2.4188843265857E-17,                                                
-                                                B.transpose((3,0,1,2)) )
+        if B is not None:# and Bmode=="pot":
+            #B transposed is [3,N,N,N]
+            self.exp_magnetic = makeBpotential( DT,  B.transpose((3,0,1,2)) )
+            
                     
         ones = np.ones([N,N,N], dtype=np.complex128)
-        pos_eig1,pos_eig2 = myPauli3D.getEnergyEigenSpinors(N,L,k0,m=1.)
-        
-        init_spinor  = myPauli3D.initspinors3D(pos_eig1,pos_eig2, spin=initial_spin)
+        pos_eig1,pos_eig2 = myPauli3D.getEnergyEigenSpinors(N,L,k0,m=1.)        
+        init_spinor  = myPauli3D.initspinors3D(pos_eig1,pos_eig2, spin=initial_spin)        
         sigma=0.06
         wavefunc = make3DGaussian(N,L, k0 , pos0,sigma)
         #print("wf sum",np.sum(np.abs(wavefunc)**2))        
+
         self.psi = wavefunc * np.multiply.outer(init_spinor, ones)
+        #or replace with above with(but inital spin is required )
+        #self.psi = wavefunc * np.multiply.outer(initial_spin, ones)
+        
         n = np.linalg.norm(self.psi)
         if n != 0:
             self.psi /= n
@@ -162,24 +171,32 @@ class myPauli3D():
         
         # free periodic (psi can be calculate at any time, but because
         # there can be a magnetic field(B) is calculated in DT time steps
+
+        
         X, Y, Z = np.meshgrid(L*np.linspace(-0.5, 0.5 - 1.0/N, N),
                               L*np.linspace(-0.5, 0.5 - 1.0/N, N),
                               L*np.linspace(-0.5, 0.5 - 1.0/N, N))
 
-        f = np.fft.fftfreq(N)
-        f[0] = 1e-60
-        P = np.pi * f * N / L # Momenta in 1D
-        PX, PY, PZ = np.meshgrid(P, P, P) # Momenta in the x y z directions
-        
-        self.E = self.get_energies([PX, PY, PZ])
-#        self.U = self.get_eigenvectors(L,[PX, PY, PZ]) # 2x2 matrix containing the eigenvectors
-                                               
-        self.U = np.array([np.multiply.outer(pos_eig1, ones),
-                           np.multiply.outer(pos_eig2, ones)])
+        if self.bUseSplit:
+            Lm=L*5.29177210903E-11
+            DTm=DT*2.4188843265857E-17
+            self.V = np.zeros([N,N,N])        
+            self.U = SplitStepMethod(self.V, (Lm, Lm,Lm), DTm) 
+        else:
+            f = np.fft.fftfreq(N)
+            f[0] = 1e-60
+            P = np.pi * f * N / L # Momenta in 1D
+            PX, PY, PZ = np.meshgrid(P, P, P) # Momenta in the x y z directions
+            
+            self.E = self.get_energies([PX, PY, PZ])
+    ##        self.U =self.get_eigenvectors(L,[PX, PY, PZ])
+                                                                   
+            self.U = np.array([np.multiply.outer(pos_eig1, ones),
+                               np.multiply.outer(pos_eig2, ones)])
 
-        ind = [i for i in range(3 + 2)]
-        ind[0], ind[1] = ind[1], ind[0]
-        self.U_DAGGER = np.conj(np.transpose(self.U, ind))
+            ind = [i for i in range(3 + 2)]
+            ind[0], ind[1] = ind[1], ind[0]
+            self.U_DAGGER = np.conj(np.transpose(self.U, ind))
             
         
         
@@ -224,16 +241,23 @@ class myPauli3D():
     def doAnimFrame(self,Bmagnetic=None,Usteps=1):                
 
         if self.numframes>0:
-            for _ in range(Usteps):                            
-                self.psi = self.dostep(self.psi,self.dt *2. )
-
+            for _ in range(Usteps):
+                if self.bUseSplit:
+                    for i in range(2):                    
+                        self.psi[i] = self.U(self.psi[i])
+                else:
+                    self.psi = self.dostep(self.psi,self.dt *2. )
+                
                 if Bmagnetic is not None:
                     
                     sbloch= self.getSpinExpecValue(self.psi)
                     if self.Bmode=="pot": #with B as potential, spin rotates so looks ok
                         self.psi = np.einsum('ij...,j...->i...', self.exp_magnetic, self.psi)
                     else:  # with B as dot, spin don't rotate so is a botch
-                        spinDotB(self.N, self.dt, self.psi,Bmagnetic, sbloch)
+                        bv= np.zeros([2,2],dtype=np.complex128)
+                        #print(np.shape(self.exp_magnetic))
+                        applyDotMatrix3D( self.N , self.psi,self.exp_magnetic,bv)                                            
+                        #spinDotB(self.N, self.dt, self.psi,Bmagnetic, sbloch)
                 n =np.linalg.norm(self.psi)                
                 if n!=0:
                     self.psi /= n

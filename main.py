@@ -9,7 +9,12 @@ from myGLutils import getOglVBOfromArray
 from mydlgogl import mydlgOgl
 import matplotlib.pyplot as plt
 from myDirac3D import myDirac3D # encapsulates dirac (both split step and free eigen periodic)
-from myPauli3D import myPauli3D # encapsulates Pauli class
+
+# encapsulates Pauli class
+# or u can import myPauli3D from myPauli3Dsplit to test diferences
+# in my tests results are the same
+from myPauli3D import myPauli3D
+
 from mydlgdirac import mydlgDirac
 from myMagnetic import magneticlass
 from mydlgB import Bdlg
@@ -190,6 +195,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             # update label widgets in main window            
             self.lbinfo.setText(ss + str(animpos) + " from " + str(animframes) +
                                 " spin ="  + str(np.round(spinvec,3)) +
+                                " sum =" + str(np.round(np.linalg.norm(spinvec),3) ) + 
                                 "\nOGL points =" + str(len(points)))
             return True
         else:

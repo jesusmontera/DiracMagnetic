@@ -2,6 +2,33 @@ import numpy as np
 import math
 from numba import jit
 
+@jit(nopython=True)    
+def applyDotMatrix3D( N: int , psi: np.ndarray, Bpot : np.ndarray,bv : np.ndarray):    
+    sv= np.zeros(2,dtype=np.complex128)
+    for x in range (N):
+        for y in range (N):
+            for z in range(N):                
+                sv[0]= psi[0][x][y][z]
+                sv[1]= psi[1][x][y][z]
+                
+##                bv[0][0]=1+1j
+##                bv[0][1]=1+2j
+##                bv[1][0]=1+3j
+##                bv[1][1]=1+5j
+
+                bv[0][0]=Bpot[0][0][x][y][z]
+                bv[0][1]=Bpot[0][1][x][y][z]
+                bv[1][0]=Bpot[1][0][x][y][z]
+                bv[1][1]=Bpot[1][1][x][y][z]
+
+                
+                sv = np.dot(sv,bv)
+                psi[0][x][y][z]=sv[0]
+                psi[1][x][y][z]=sv[1]
+                
+                
+
+
 ##########################################################################
 #   construct potential from B magnetic vector's matrix 
 ##########################################################################
