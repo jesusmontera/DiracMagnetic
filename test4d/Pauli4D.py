@@ -29,32 +29,41 @@ class Pauli4D():
         self.psi=None
         self.U=None
         self.exp_magnetic=None
+        self.rotmatrix=None
         self.numframes=0
-    def makerotMatrix(self):
-        # this 4d rotation spinor matrix simulates a magnetic field
+    def makeBspinnors(self,bHalf):
+        # this 4d rotation spinor matrix simulates a non uniform magnetic field in Y
         N= self.N
-        rotmatrix=np.zeros([N,N,N,N,4,4],dtype=np.complex128)
-    
+        self.rotmatrix=np.zeros([N,N,N,N,4,4],dtype=np.complex128)
+        if bHalf:
+            sb=" (half right space)"
+        else:
+            sb=" (all space)"
+        print("making B " + sb + "no uniform in Y axis by spinnors 4x4")
+        
         for x in range(N):            
-            for y in range(N):                
-##                if x<N//2:
-##                    σ = 0.0
-##                else:
-##                    σ = np.pi*y*0.7 /N
-                σ = np.pi*y*0.7 /N  # coment this line and uncoment the upper to apply
-                                    # the magnetic field(rotations) to only one particle
+            for y in range(N):
+                if bHalf: # only in half left space(one particle)
+                 # this is to see how the spin affects the the two particles motion 
+                 # since they are entagled in space, B magnetic spinnors are only acting on one
+                    if x<N//2:
+                        σ = 0.0
+                    else:
+                        σ = np.pi*y*0.7 /N
+                else: # all space(both particles)
+                    σ = np.pi*y*0.7 /N 
                     
                 c=np.cos(σ/2)
                 s= np.sin(σ/2)
-                r2= np.array([[c,s],[-s,c]])
-                r4 = np.kron(r2,r2) # this convert spinors rotations from 2d to 4d
+                r2= np.array([[c,s],[-s,c]]) # this is Pauli spinnor for Y in 2d(2x2 complexs)
+                r4 = np.kron(r2,r2) # and this is Pauli spinors in 4d(4x4 complexs)
                 # the next 2 loops loops is to convert the rotations from 2d  to 4d
+                # because or two particle psi is [4,N,N,N,N]
                 for a in range(N):
                     for b in range(N):                
-                        rotmatrix[x][y][a][b]=r4
-                
-        return rotmatrix
-    
+                        self.rotmatrix[x][y][a][b]=r4
+
+        print("end making B no uniform in Y axis")
     
        
     def makewavefuncion(self,N,L,pos,k):
@@ -84,7 +93,7 @@ class Pauli4D():
         
     def initialize(self,N,L,DT,pos,k,initial_spin):
 
-        
+        self.clear()        
         self.N  = N
         self.L=L
         self.dt=DT        
@@ -110,8 +119,7 @@ class Pauli4D():
         if self.V is None:
             #self.V= makebarrier4d(N)            
             self.V=np.zeros([N,N,N,N])
-        self.rotmatrix = self.makerotMatrix()                
-        
+                
         self.U = SplitStepMethod(self.V, (Lm, Lm,Lm, Lm), DTm)
 
         
@@ -135,6 +143,7 @@ class Pauli4D():
             self.psi2d[1][i]= np.einsum('kiqj->ij', self.psi[i]) #/ self.sumpsi2d[0][i]
     
     def getSpinExpecValue(self):
+        # this is not working ok(at least for spin 2)
         self.psi4dto2d()    
         sex=np.zeros([2,3],dtype=np.complex128)
         

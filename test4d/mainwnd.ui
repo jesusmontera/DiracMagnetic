@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
+    <width>682</width>
     <height>678</height>
    </rect>
   </property>
@@ -16,13 +16,13 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Pauli two particles in magnetic field (4x4 spinnors rotations) </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBoxPos">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>10</y>
       <width>121</width>
       <height>151</height>
@@ -61,7 +61,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>30</y>
+       <y>60</y>
        <width>51</width>
        <height>25</height>
       </rect>
@@ -70,7 +70,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>0</string>
+      <string>0.3</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -80,7 +80,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>60</y>
+       <y>30</y>
        <width>51</width>
        <height>25</height>
       </rect>
@@ -125,7 +125,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>120</y>
+       <y>90</y>
        <width>61</width>
        <height>25</height>
       </rect>
@@ -141,7 +141,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>90</y>
+       <y>120</y>
        <width>61</width>
        <height>25</height>
       </rect>
@@ -157,9 +157,9 @@
    <widget class="QPushButton" name="btPlay">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>60</y>
-      <width>89</width>
+      <x>530</x>
+      <y>480</y>
+      <width>131</width>
       <height>51</height>
      </rect>
     </property>
@@ -175,8 +175,8 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>40</y>
+      <x>520</x>
+      <y>380</y>
       <width>31</width>
       <height>20</height>
      </rect>
@@ -184,15 +184,21 @@
     <property name="text">
      <string>N</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QLineEdit" name="txN">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>40</y>
+      <x>520</x>
+      <y>400</y>
       <width>41</width>
       <height>25</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of psi points&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>32</string>
@@ -204,8 +210,8 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>80</y>
+      <x>600</x>
+      <y>380</y>
       <width>31</width>
       <height>20</height>
      </rect>
@@ -213,15 +219,21 @@
     <property name="text">
      <string>L</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QLineEdit" name="txL">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>80</y>
+      <x>600</x>
+      <y>400</y>
       <width>41</width>
       <height>25</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;space length in atomic units&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>2</string>
@@ -233,8 +245,8 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>120</y>
+      <x>520</x>
+      <y>440</y>
       <width>31</width>
       <height>20</height>
      </rect>
@@ -242,15 +254,21 @@
     <property name="text">
      <string>DT</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QLineEdit" name="txDT">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>120</y>
-      <width>81</width>
+      <x>560</x>
+      <y>440</y>
+      <width>71</width>
       <height>25</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>time step in atomic units</string>
     </property>
     <property name="text">
      <string>0.001</string>
@@ -262,7 +280,7 @@
    <widget class="QGroupBox" name="groupBoxPos_2">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>170</x>
       <y>10</y>
       <width>121</width>
       <height>151</height>
@@ -301,7 +319,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>30</y>
+       <y>60</y>
        <width>51</width>
        <height>25</height>
       </rect>
@@ -310,7 +328,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>0</string>
+      <string>-0.4</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -320,7 +338,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>60</y>
+       <y>30</y>
        <width>51</width>
        <height>25</height>
       </rect>
@@ -365,7 +383,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>120</y>
+       <y>90</y>
        <width>61</width>
        <height>25</height>
       </rect>
@@ -381,7 +399,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>90</y>
+       <y>120</y>
        <width>61</width>
        <height>25</height>
       </rect>
@@ -398,7 +416,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
+      <y>220</y>
       <width>451</width>
       <height>441</height>
      </rect>
@@ -413,9 +431,9 @@
    <widget class="QPushButton" name="btReplay">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>120</y>
-      <width>89</width>
+      <x>550</x>
+      <y>550</y>
+      <width>91</width>
       <height>51</height>
      </rect>
     </property>
@@ -428,13 +446,356 @@
      <string>RePlay</string>
     </property>
    </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>0</y>
+      <width>391</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>initial spin (state vector)</string>
+    </property>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>130</y>
+       <width>21</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>3</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>21</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>21</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>21</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>1</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txspin0r">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>40</y>
+       <width>131</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbbloch1">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>361</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>bloch 1</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbbloch2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>190</y>
+       <width>361</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>bloch 2</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txspin0i">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>40</y>
+       <width>131</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txspin1i">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>70</y>
+       <width>131</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txspin1r">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>70</y>
+       <width>131</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txspin3i">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>130</y>
+       <width>131</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txspin3r">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>130</y>
+       <width>131</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>20</y>
+       <width>91</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>imaginary</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_18">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>20</y>
+       <width>91</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>real</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btLoadSpin">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>50</y>
+       <width>71</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>load a spin state vector file (npy with 4 complex numbers that forms a state vector)</string>
+     </property>
+     <property name="text">
+      <string>
+Load
+spin
+file
+</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLineEdit" name="txspin2i">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>100</y>
+      <width>131</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txspin2r">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>100</y>
+      <width>131</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;from -0.8 to 0.8&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>250</y>
+      <width>211</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Magnetic potential spinnors</string>
+    </property>
+    <widget class="QRadioButton" name="radioBall">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>181</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;apply B spinnors to all space(both particles)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>2 particles (all space)</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioBhalf">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>191</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Apply B spinnos to only the right half space( one particle)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>1 particle (half right space)</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>556</width>
+     <width>682</width>
      <height>25</height>
     </rect>
    </property>
